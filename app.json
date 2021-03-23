@@ -1,0 +1,17 @@
+{
+  "name": "isdaculture",
+  "displayName": "isdaculture",
+  "expo": {
+    "name": "isdaculture",
+    "slug": "isdaculture",
+    "version": "1.0.0",
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "package": "com.isdaculture.isdaculture"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

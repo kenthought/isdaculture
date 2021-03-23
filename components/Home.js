@@ -1,0 +1,51 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchUser, fetchPonds } from "../redux/actions";
+import { bindActionCreators } from "redux";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import PondsScreen from "./main/Ponds"
+import NotificationScreen from "./main/Notification";
+
+const Tab = createBottomTabNavigator();
+
+export class Home extends Component {
+    componentDidMount = () => {
+        this.props.fetchUser()
+        this.props.fetchPonds()
+    }
+    render = () => {
+        // const { currentUser } = this.props
+        // if (currentUser == undefined) {
+        //     return (
+        //         <View style={styles.container}>
+        //             <Text>Logging in...</Text>
+        //         </View>
+        //     )
+        // }
+        return (
+            <Tab.Navigator>
+                <Tab.Screen name="Ponds" component={PondsScreen}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="home" color={color} size={26} />
+                        )
+                    }} />
+                <Tab.Screen name="Notification" component={NotificationScreen}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="bell" color={color} size={26} />
+                        )
+                    }} />
+            </Tab.Navigator>
+        )
+    }
+}
+
+const mapToStateProps = state => ({
+    currentUser: state.userState.currentUser
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchUser, fetchPonds }, dispatch)
+  
+export default connect(mapToStateProps, mapDispatchToProps)(Home);
