@@ -26,7 +26,7 @@ export const AddPond = ( {navigation} ) => {
 
     useEffect(() => {
         pondFishCapacity()
-    }, [pondLength, pondWidth])
+    }, [pondLength, pondWidth, checked, checked2, checked3])
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || pondDateStarted;

@@ -8,6 +8,7 @@ import { schedulePushNotification } from "./Notification";
 
 export const PondRealtime = ({ route }) => {
     const [pondDetails, setPondDetails] = useState(null)
+    const [pondTempTime, setPondTempTime] = useState("")
     const [pondTemp, setPondTemp] = useState("")
     const [prevPondTemp, setPrevPondTemp] = useState("")
     const [pondDO, setPondDO] = useState("")
@@ -38,7 +39,7 @@ export const PondRealtime = ({ route }) => {
 
     const PondRealtimeTempChart = () => (
         <View style={{ marginTop: 30 }}>
-            <Text>{pondDetails.pondName} Temperature</Text>
+            <Text>{pondDetails.pondName} Temperature {pondTempTime}</Text>
             <LineChart
                 data={{
                     labels: chartLabel,
@@ -89,66 +90,32 @@ export const PondRealtime = ({ route }) => {
             })
     }
 
-    const fetchPondTemp = () => {
-        // firebase.database()
-        //     .ref("pondRealtimeTemp")
-        //     .on("value", (snapshot) => {
-        //         chartLabel.splice(0, 1)
-        //         chartLabel.splice(5, 0, formatAMPM(snapshot.val().date))
-        //         setChartLabel(chartLabel)
-        //         chartData.splice(0, 1)
-        //         chartData.splice(5, 0, snapshot.val().pondTemp)
-        //         setChartData(chartData)
-        //         setPondTemp(snapshot.val().pondTemp)
-        //         tempStatus(snapshot.val().pondTemp)
-        //         // console.log(snapshot.val())
-        //     }, (errorObject) => {
-        //         console.log(errorObject.code + " : " + errorObject.message)
-        //     })
-        fetchPondChart()
-        // firebase.database()
-        //     .ref("pondRealtimeChart")
-        //     .limitToLast(1)
-        //     .on("value", (snapshot) => {
-        //         snapshot.forEach(function (childSnapshot) {
-        //             var childData = childSnapshot.val();
-        //                     chartLabel.splice(0, 1)
-        //                     chartLabel.splice(5, 0, formatAMPM(childData.date))
-        //                     setChartLabel(chartLabel)
-        //                     chartData.splice(0, 1)
-        //                     chartData.splice(5, 0, childData.pondTemp)
-        //                     setChartData(chartData)
-        //             setPondTemp(childData.pondTemp)
-        //             tempStatus(childData.pondTemp)
-        //         });
-        //     }, (errorObject) => {
-        //         console.log(errorObject.code + " : " + errorObject.message)
-        //     })
-    }
-
-    const fetchPondChart = () => {
+    const fetchRealtimeData = () => {
         firebase.database()
             .ref("pondRealtimeData")
             .limitToLast(5)
             .on("value", (snapshot) => {
                 var count = 0
-                var fetchChartData = []
+                var fetchChartTempData = []
+                var fetchDOData = ""
                 var fetchChartLabel = []
                 snapshot.forEach(function (childSnapshot) {
                     var childData = childSnapshot.val();
-                    fetchChartData[count] = childData.pondTemp
+                    fetchChartTempData[count] = parseFloat(childData.pondTemp)
+                    fetchDOData = childData.pondDO
                     fetchChartLabel[count] = formatAMPM(childData.date)
+                    setPondTempTime(formatAMPM(childData.date))
                     count++
                 });
-                chartData.splice(0, chartData.length, ...fetchChartData)
+                chartData.splice(0, chartData.length, ...fetchChartTempData)
                 setChartData(chartData)
-                chartLabel.splice(0, fetchChartData.length, ...fetchChartLabel)
+                chartLabel.splice(0, chartLabel.length, ...fetchChartLabel)
                 setChartLabel(chartLabel)
-                setPondTemp(chartData[4])
-                setPrevPondTemp(chartData[3])
-                tempStatus(chartData[chartData.length - 1])
-                // console.log(prevPondTemp, pondTemp)
-                // console.log(chartData)
+                setPondDO(fetchDOData)
+                setPondTemp(chartData[chartData.length - 1])
+                setPrevPondTemp(chartData[chartData.length - 2])
+                tempStatus(pondTemp)
+                doStatus(pondDO)
                 sendPondNotificationAndFluctuationRecording()
             }, (errorObject) => {
                 console.log(errorObject.code + " : " + errorObject.message)
@@ -304,9 +271,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (parseFloat(pondTemp) >= 24 && parseFloat(pondTemp) < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                    clearInterval(refreshIntervalId);
-                    // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                    timer = 1;
+                clearInterval(refreshIntervalId);
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                timer = 1;
             }
         }
         else if (parseFloat(prevPondTemp) >= 16 && parseFloat(prevPondTemp) < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -331,9 +298,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (parseFloat(pondTemp) >= 24 && parseFloat(pondTemp) < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                    clearInterval(refreshIntervalId);
-                    // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                    timer = 1;
+                clearInterval(refreshIntervalId);
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                timer = 1;
             }
         }
         else if (parseFloat(prevPondTemp) >= 40 && parseFloat(prevPondTemp) < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -358,9 +325,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (parseFloat(pondTemp) >= 24 && parseFloat(pondTemp) < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                    clearInterval(refreshIntervalId);
-                    // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                    timer = 1;
+                clearInterval(refreshIntervalId);
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                timer = 1;
             }
         }
         else if (parseFloat(prevPondTemp) < 16 && parseFloat(prevPondTemp) != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -385,9 +352,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (parseFloat(pondTemp) >= 24 && parseFloat(pondTemp) < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                    clearInterval(refreshIntervalId);
-                    // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                    console.log(timer)
+                clearInterval(refreshIntervalId);
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                console.log(timer)
             }
         }
         else if (parseFloat(prevPondTemp) >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -412,23 +379,11 @@ export const PondRealtime = ({ route }) => {
             }
             else if (parseFloat(pondTemp) >= 24 && parseFloat(pondTemp) < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                    clearInterval(refreshIntervalId);
-                    // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                    timer = 1;
+                clearInterval(refreshIntervalId);
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                timer = 1;
             }
         }
-    }
-
-    const fetchPondDO = () => {
-        firebase.database()
-            .ref("pondRealtimeDO")
-            .on("value", (snapshot) => {
-                setPondDO(snapshot.val().pondDO)
-                doStatus(snapshot.val().pondDO)
-                // console.log(snapshot.val())
-            }, (errorObject) => {
-                console.log(errorObject.code + " : " + errorObject.message)
-            })
     }
 
     const doStatus = (pondDO) => {
@@ -464,14 +419,15 @@ export const PondRealtime = ({ route }) => {
         if (pondDetails === null) {
             fetchPondDetails()
         } else {
-            fetchPondTemp()
-            fetchPondDO()
+            fetchRealtimeData()
         }
 
-        return () => { firebase.database().ref().off() };
-    }, [pondDetails])
+        return () => {
+            firebase.database().ref('pondRealtimeData').off()
+        };
+    }, [pondDetails, pondTempTime])
 
-    if (pondDetails === null || pondTemp === "" || pondDO === "") {
+    if (pondDetails === null) {
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 <Text>Loading...</Text>

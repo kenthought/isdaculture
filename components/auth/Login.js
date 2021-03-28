@@ -1,12 +1,25 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
 import { TextInput } from "react-native-paper";
+import firebase  from "firebase";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
+  const logIn = (email, password) => {
+  firebase.auth().signInWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // Signed in
+    var user = userCredential.user;
+    console.log(user)
+    // ...
+  })
+  .catch((error) => {
+    console.log(error)
+  });
+}
   return (
     <View style={styles.container}>
       <Text style={styles.title}>IsdaCulture</Text>
@@ -15,15 +28,15 @@ const Login = ({ navigation }) => {
           theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
           keyboardType="email-address"
           label="Email"
-          setEmail={email => onChangeText(email)} />
+          onChangeText={email => setEmail(email)} />
         <TextInput style={styles.input}
           theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
           label="Password"
           secureTextEntry={true}
-          setPassword={password => onChangeText(password)} />
+          onChangeText={password => setPassword(password)} />
       </View>
       <View style={{ marginTop: 30, marginBottom: 20 }}>
-        <Button color='skyblue' title="Login" />
+        <Button color='skyblue' title="Login" onPress={() => logIn(email, password)} />
       </View>
       <View style={{ marginTop: 20, marginBottom: 20, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Don't have an account yet? </Text>
