@@ -31,6 +31,8 @@ export const PondRealtime = ({ route }) => {
     const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
+    const [timer, setTimer] = useState("")
+    // const [refreshIntervalId, setRefreshIntervalId] = useState('')
 
     const RealtimeTemp = () => (
         <View style={{ alignItems: "center", padding: 5 }}>
@@ -60,7 +62,7 @@ export const PondRealtime = ({ route }) => {
                         }
                     ]
                 }}
-                width={chartWidth - 20} // from react-native
+                width={chartWidth - 18} // from react-native
                 height={220}
                 yAxisSuffix="°C"
                 yAxisInterval={1} // optional, defaults to 1
@@ -190,10 +192,7 @@ export const PondRealtime = ({ route }) => {
     }
 
     const sendPondNotificationAndFluctuationRecording = () => {
-        var timer = 1
-        var refreshIntervalId = ''
-
-        console.log(prevPondTemp, pondTemp)
+        console.log(prevPondTemp, pondTemp, timer)
         if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
             if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
@@ -207,7 +206,8 @@ export const PondRealtime = ({ route }) => {
             if (pondTemp >= 16 && pondTemp < 20)    //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (COLD)
             {
                 //start timer for fluctuation recording
-                refreshIntervalId = setInterval(function () { timer++; }, 1000);
+                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
+                setTimer(new Date())
 
                 var title = "Normal to Warning 2 (Cold) Temperature";
                 var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond in the pond lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
@@ -216,7 +216,8 @@ export const PondRealtime = ({ route }) => {
             else if (pondTemp >= 40 && pondTemp < 44)   //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (HOT)
             {
                 //start timer for fluctuation recording
-                refreshIntervalId = setInterval(function () { timer++; }, 1000);
+                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
+                setTimer(new Date())
 
                 var title = "Normal to Warning 2 (Hot) Temperature";
                 var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond in the pond rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
@@ -225,7 +226,8 @@ export const PondRealtime = ({ route }) => {
             else if (pondTemp < 16) //sms sending and fluctuation recording when current temperature reaches CRITICAL status (COLD)
             {
                 //start timer for fluctuation recording
-                refreshIntervalId = setInterval(function () { timer++; }, 1000);
+                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
+                setTimer(new Date())
 
                 var title = "Normal to Critical (Cold) Temperature";
                 var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
@@ -234,7 +236,8 @@ export const PondRealtime = ({ route }) => {
             else if (pondTemp >= 44)    //sms sending and fluctuation recording when current temperature reaches CRITICAL status (HOT)
             {
                 //start timer for fluctuation recording
-                refreshIntervalId = setInterval(function () { timer++; }, 1000);
+                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
+                setTimer(new Date())
 
                 var title = "Normal to Critical (Hot) Temperature";
                 var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
@@ -243,7 +246,8 @@ export const PondRealtime = ({ route }) => {
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
             {
                 //start timer for fluctuation recording
-                refreshIntervalId = setInterval(function () { timer++; }, 1000);
+                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
+                setTimer(new Date())
 
                 if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
                 {
@@ -285,10 +289,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                console.log(timer)
-                clearInterval(refreshIntervalId);
+                console.log("1st " + ((new Date().getTime() - timer.getTime())/1000))
                 // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                timer = 1;
+                setTimer("");
             }
         }
         else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -313,10 +316,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                console.log(timer)
-                clearInterval(refreshIntervalId);
+                console.log("2nd " + timer)
                 // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                timer = 1;
+                setTimer("");
             }
         }
         else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -341,10 +343,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                console.log(timer)
-                clearInterval(refreshIntervalId);
+                console.log("3rd " + timer)
                 // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                timer = 1;
+                setTimer("");
             }
         }
         else if (prevPondTemp < 16 && prevPondTemp != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -369,8 +370,7 @@ export const PondRealtime = ({ route }) => {
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                console.log(timer)
-                clearInterval(refreshIntervalId);
+                console.log("4th " + timer)
                 // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
             }
         }
@@ -396,10 +396,9 @@ export const PondRealtime = ({ route }) => {
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
-                console.log(timer)
-                clearInterval(refreshIntervalId);
+                console.log("5th " + timer)
                 // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                timer = 1;
+                setTimer("");
             }
         }
     }
