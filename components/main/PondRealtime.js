@@ -28,10 +28,11 @@ export const PondRealtime = ({ route }) => {
     const [pondStatus, setPondStatus] = useState("")
     const [pondTempStatus, setPondTempStatus] = useState("")
     const [pondDOStatus, setPondDOStatus] = useState("")
+    const [tempAndProdStatus, setTempAndProdStatus] = useState([])
     const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
-    const [timer, setTimer] = useState("")
+    const [fluctuationDate, setFluctuationDate] = useState("")
     // const [refreshIntervalId, setRefreshIntervalId] = useState('')
 
     const RealtimeTemp = () => (
@@ -191,218 +192,6 @@ export const PondRealtime = ({ route }) => {
         }
     }
 
-    const sendPondNotificationAndFluctuationRecording = () => {
-        console.log(prevPondTemp, pondTemp, timer)
-        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
-        {
-            if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
-            {
-                console.log("\nTemperature Analysis commencing...");
-                console.log("\nSMS Notification Sending: Enabled");
-                console.log("\nSystem Action Logs Insertion: Enabled");
-                console.log("\nFluctuation Occurrence Recording: Enabled\n");
-            }
-
-            if (pondTemp >= 16 && pondTemp < 20)    //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (COLD)
-            {
-                //start timer for fluctuation recording
-                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
-                setTimer(new Date())
-
-                var title = "Normal to Warning 2 (Cold) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond in the pond lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (HOT)
-            {
-                //start timer for fluctuation recording
-                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
-                setTimer(new Date())
-
-                var title = "Normal to Warning 2 (Hot) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond in the pond rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp < 16) //sms sending and fluctuation recording when current temperature reaches CRITICAL status (COLD)
-            {
-                //start timer for fluctuation recording
-                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
-                setTimer(new Date())
-
-                var title = "Normal to Critical (Cold) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 44)    //sms sending and fluctuation recording when current temperature reaches CRITICAL status (HOT)
-            {
-                //start timer for fluctuation recording
-                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
-                setTimer(new Date())
-
-                var title = "Normal to Critical (Hot) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
-            {
-                //start timer for fluctuation recording
-                // setRefreshIntervalId(setInterval(function () { setTimer(timer => timer++) }, 1000));
-                setTimer(new Date())
-
-                if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
-                {
-                    // condition_id = 3;
-                    // production_id = 3;
-                }
-                else if (pondTemp >= 36 && pondTemp < 40) //WARNING 1 (Hot)
-                {
-                    // condition_id = 3;
-                    // production_id = 2;
-                }
-            }
-        }
-        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40))    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
-        {
-            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
-            {
-                var title = "Warning 1 to Warning 2 (Cold) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
-            {
-                var title = "Warning 1 to Warning 2 (Hot) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp < 16) //sms sending when current temperature reaches CRITICAL status (COLD)
-            {
-                var title = "Warning 1 to Critical (Cold) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
-            {
-                var title = "Warning 1 to Critical (Hot) Temperature";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
-            {
-                console.log("1st " + ((new Date().getTime() - timer.getTime())/1000))
-                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                setTimer("");
-            }
-        }
-        else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
-        {
-            if (pondTemp < 16)      //sms sending when current temperature reaches CRITICAL status (COLD)
-            {
-                var title = "Warning 2 (Cold) to Critical (Too Cold)";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond continues to lower down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
-            {
-                console.log("2nd " + timer)
-                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                setTimer("");
-            }
-        }
-        else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
-        {
-            if (pondTemp < 16)     //sms sending when current temperature reaches CRITICAL status (COLD)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
-            {
-                var title = "Warning 2 (Hot) to Critical (Too Hot)";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond continues to rise up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
-            {
-                console.log("3rd " + timer)
-                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                setTimer("");
-            }
-        }
-        else if (prevPondTemp < 16 && prevPondTemp != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
-        {
-            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
-            {
-                var title = "Critical (Too Cold) to Warning 2 (Cold)";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond is now under regulation and continues to rise up at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
-            {
-                console.log("4th " + timer)
-                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-            }
-        }
-        else if (prevPondTemp >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
-        {
-            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
-            {
-                var title = "Critical (Too Hot) to Warning 2 (Hot)";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond is now under regulation and continues to lower down at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp < 16)      //sms sending when current temperature reaches CRITICAL status (COLD)
-            {
-                var title = "QUALITY ASSURANCE";
-                var body = pondDetails.pondName + " Advisory:\n\nWater temperature in the pond suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                sendPushNotification(expoPushToken, title, body)
-            }
-            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
-            {
-                console.log("5th " + timer)
-                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
-                setTimer("");
-            }
-        }
-    }
-
     const doStatus = () => {
         if (pondDO >= 3 && pondDO < 4) {
             setPondStatus("Warning 2");
@@ -426,6 +215,273 @@ export const PondRealtime = ({ route }) => {
             setPondDOStatus("WORST");
         }
     }
+
+    const sendPondNotificationAndFluctuationRecording = () => {
+        console.log(prevPondTemp, pondTemp, fluctuationDate)
+        var tempArr = []
+        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
+        {
+            if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
+            {
+                console.log("\nTemperature Analysis commencing...");
+                console.log("\nSMS Notification Sending: Enabled");
+                console.log("\nSystem Action Logs Insertion: Enabled");
+                console.log("\nFluctuation Occurrence Recording: Enabled\n");
+            }
+
+            if (pondTemp >= 16 && pondTemp < 20)    //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (COLD)
+            {
+                //start timer for fluctuation recording
+                setFluctuationDate(new Date())
+                tempAndProdStatus.push("WORSE")
+                tempAndProdStatus.push("Warning 2 (Cold)")
+                setTempAndProdStatus(tempAndProdStatus)
+
+                var title = "Normal to Warning 2 (Cold) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending and fluctuation recording when current temperature reaches WARNING 2 status (HOT)
+            {
+                //start timer for fluctuation recording
+                setFluctuationDate(new Date())
+                tempAndProdStatus.push("WORSE")
+                tempAndProdStatus.push("Warning 2 (Hot)")
+                setTempAndProdStatus(tempAndProdStatus)
+
+                var title = "Normal to Warning 2 (Hot) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp < 16) //sms sending and fluctuation recording when current temperature reaches CRITICAL status (COLD)
+            {
+                //start timer for fluctuation recording
+                setFluctuationDate(new Date())
+                tempAndProdStatus.push("WORST")
+                tempAndProdStatus.push("Critical (Cold)")
+                setTempAndProdStatus(tempAndProdStatus)
+
+                var title = "Normal to Critical (Cold) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 44)    //sms sending and fluctuation recording when current temperature reaches CRITICAL status (HOT)
+            {
+                //start timer for fluctuation recording
+                setFluctuationDate(new Date())
+                tempAndProdStatus.push("WORST")
+                tempAndProdStatus.push("Critical (Hot)")
+                setTempAndProdStatus(tempAndProdStatus)
+
+                var title = "Normal to Critical (Hot) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
+            {
+                //start timer for fluctuation recording
+                setFluctuationDate(new Date())
+
+                if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
+                {
+                    // condition_id = 3;
+                    // production_id = 3;
+                    tempAndProdStatus.push("BAD")
+                    tempAndProdStatus.push("Warning 1 (Cold)")
+                }
+                else if (pondTemp >= 36 && pondTemp < 40) //WARNING 1 (Hot)
+                {
+                    // condition_id = 3;
+                    // production_id = 2;
+                    tempAndProdStatus.push("BAD")
+                    tempAndProdStatus.push("Warning 1 (Hot)")
+                }
+                setTempAndProdStatus(tempAndProdStatus)
+            }
+        }
+        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40))    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
+        {
+            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
+            {
+                var title = "Warning 1 to Warning 2 (Cold) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
+            {
+                var title = "Warning 1 to Warning 2 (Hot) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp < 16) //sms sending when current temperature reaches CRITICAL status (COLD)
+            {
+                var title = "Warning 1 to Critical (Cold) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
+            {
+                var title = "Warning 1 to Critical (Hot) Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
+            {
+                var title = "Normal Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
+                sendPushNotification(expoPushToken, title, body)
+                console.log("1st " + tempArr + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                insertFluctuationOccurence(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                setTempAndProdStatus(null)
+                setFluctuationDate("")
+            }
+        }
+        else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        {
+            if (pondTemp < 16)      //sms sending when current temperature reaches CRITICAL status (COLD)
+            {
+                var title = "Warning 2 (Cold) to Critical (Too Cold)";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " continues to lower down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
+            {
+                var title = "Normal Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
+                console.log("2nd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                insertFluctuationOccurence(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                setTempAndProdStatus(null)
+                setFluctuationDate("")
+            }
+        }
+        else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        {
+            if (pondTemp < 16)     //sms sending when current temperature reaches CRITICAL status (COLD)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
+            {
+                var title = "Warning 2 (Hot) to Critical (Too Hot)";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " continues to rise up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
+            {
+                var title = "Normal Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
+                console.log("3rd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                insertFluctuationOccurence(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                setTempAndProdStatus(null)
+                setFluctuationDate("")
+            }
+        }
+        else if (prevPondTemp < 16 && prevPondTemp != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        {
+            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
+            {
+                var title = "Critical (Too Cold) to Warning 2 (Cold)";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " is now under regulation and continues to rise up at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 44)    //sms sending when current temperature reaches CRITICAL status (HOT)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
+            {
+                var title = "Normal Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
+                console.log("4th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                insertFluctuationOccurence(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                setTempAndProdStatus(null)
+                setFluctuationDate("")
+            }
+        }
+        else if (prevPondTemp >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        {
+            if (pondTemp >= 16 && pondTemp < 20)    //sms sending when current temperature reaches WARNING 2 status (COLD)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 40 && pondTemp < 44)   //sms sending when current temperature reaches WARNING 2 status (HOT)
+            {
+                var title = "Critical (Too Hot) to Warning 2 (Hot)";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " is now under regulation and continues to lower down at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp < 16)      //sms sending when current temperature reaches CRITICAL status (COLD)
+            {
+                var title = "QUALITY ASSURANCE";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
+                sendPushNotification(expoPushToken, title, body)
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
+            {
+                var title = "Normal Temperature";
+                var body = "IsdaCulture Advisory:\n\nWater temperature in " + pondDetails.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
+                console.log("5th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                insertFluctuationOccurence(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insert_fluctuation_occurrence(user_id, pond_id, id_arr[0], id_arr[1], timer);
+                setTempAndProdStatus(null)
+                setFluctuationDate("")
+            }
+        }
+    }
+
+    const insertNotification = () => {
+        const db = firebase.database()
+        db.ref('notification/' + firebase.auth().currentUser.uid).push().set({
+            pondID: pondDetails.pondID,
+            notification
+        })
+    }
+
+    const insertFluctuationOccurence = (fluctuationDate, temperatureStatus, pondProductionStatus, duration) => {
+        const db = firebase.database()
+        db.ref('fluctuation/' + firebase.auth().currentUser.uid).push().set({
+            pondName: pondDetails.pondName,
+            temperatureStatus,
+            pondProductionStatus,
+            fluctuationDate,
+            duration
+        })
+    }
+
 
     useEffect(() => {
         Dimensions.addEventListener('change', () => {

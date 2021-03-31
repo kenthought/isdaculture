@@ -10,7 +10,7 @@ import HomeScreen from "./components/Home";
 import PondsScreen from "./components/main/Ponds"
 import PondRealtimeScreen from "./components/main/PondRealtime"
 import AddPondScreen from "./components/main/AddPond"
-import NotificationScreen from "./components/main/Notification"
+import HistoryScreen from "./components/main/History"
 import { Provider } from 'react-redux';
 import store from "./redux/store";
 
@@ -84,7 +84,7 @@ export class App extends Component {
             <Stack.Screen name="Ponds" component={PondsScreen} navigation={this.props.navigation} />
             <Stack.Screen name="AddPondScreen" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
             <Stack.Screen name="PondRealtime" component={PondRealtimeScreen} navigation={this.props.navigation} options={{ title: 'Pond' }} />
-            <Stack.Screen name="Notification" component={NotificationScreen} />
+            <Stack.Screen name="History" component={HistoryScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

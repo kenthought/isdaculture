@@ -4,7 +4,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ProgressBar } from 'react-native-paper'
 import { connect } from "react-redux";
 
-
 const monthNames = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December"]
 
@@ -41,7 +40,7 @@ const Item = ({ pondID, pondName, pondAddress, fishCapacity, pondDateStarted, ex
                         <Text>Date Started: </Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Text>{monthNames[new Date (pondDateStarted).getMonth()] + " " + new Date (pondDateStarted).getDate() + ", " + new Date (pondDateStarted).getFullYear()}</Text>
+                        <Text>{monthNames[new Date(pondDateStarted).getMonth()] + " " + new Date(pondDateStarted).getDate() + ", " + new Date(pondDateStarted).getFullYear()}</Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row" }}>
