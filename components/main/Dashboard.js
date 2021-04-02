@@ -15,7 +15,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
-export const PondRealtime = ({ navigation, route }) => {
+export const Dashboard = ({ navigation, route }) => {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -661,4 +661,4 @@ async function registerForPushNotificationsAsync() {
     return token;
 }
 
-export default PondRealtime
+export default Dashboard

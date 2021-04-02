@@ -8,7 +8,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"]
 
 const Item = ({ pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedTimeline, props }) => (
-    <TouchableOpacity onPress={() => props.navigation.navigate("PondRealtime", { pondID: pondID })}>
+    <TouchableOpacity onPress={() => props.navigation.navigate("Dashboard", { pondID: pondID })}>
         <View style={{ marginVertical: 10 }}>
             <View style={{ flexDirection: "column" }}>
                 <View style={{ flex: 1, flexDirection: "row" }}>
