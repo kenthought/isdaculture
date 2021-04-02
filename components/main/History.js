@@ -74,7 +74,7 @@ export const History = (props) => {
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.screenTitle}>History</Text>
+        <Text style={styles.screenTitle}>{pondDetails.pondName} History</Text>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
           <Text style={{ color: "lightgrey", fontSize: 20 }}>No history</Text>

@@ -1,9 +1,10 @@
 import { combineReducers } from "redux";
-import { USER_POND_STATE_CHANGE, USER_STATE_CHANGE, USER_HISTORY_STATE_CHANGE } from "./constants";
+import { USER_POND_STATE_CHANGE, USER_STATE_CHANGE, USER_NOTIFICATION_STATE_CHANGE, USER_HISTORY_STATE_CHANGE } from "./constants";
 
 const initialState = {
     currentUser: null,
     ponds: [],
+    notification: [],
     fluctuation: []
 }
 
@@ -18,6 +19,11 @@ export const user = (state = initialState, action) => {
             return {
                 ...state,
                 ponds: action.ponds
+            }
+        case USER_NOTIFICATION_STATE_CHANGE:
+            return {
+                ...state,
+                notification: action.notification
             }
         case USER_HISTORY_STATE_CHANGE:
             return {
