@@ -1,15 +1,15 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, TouchableOpacity, ScrollView,  } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, TouchableOpacity, ScrollView, } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ProgressBar } from 'react-native-paper'
 import { connect } from "react-redux";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
-"July", "August", "September", "October", "November", "December"]
+    "July", "August", "September", "October", "November", "December"]
 
 const Item = ({ pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedTimeline, props }) => (
-    <TouchableOpacity onPress={() => props.navigation.navigate("PondRealtime", {pondID: pondID })}>
-        <View style={{ marginVertical: 10 }}> 
+    <TouchableOpacity onPress={() => props.navigation.navigate("PondRealtime", { pondID: pondID })}>
+        <View style={{ marginVertical: 10 }}>
             <View style={{ flexDirection: "column" }}>
                 <View style={{ flex: 1, flexDirection: "row" }}>
                     <View style={{ flex: 1 }}>
@@ -66,18 +66,18 @@ const pondProgress = (pondDateStarted, expectedTimeline) => {
     const currentDate = new Date()
     expectedDate.setDate(expectedDate.getDate() + expectedTimeline);
     return ((currentDate - dateStarted) / (expectedDate - dateStarted)) * 100;
-  }
+}
 
 const AddPondButton = ({ props }) => (
     <TouchableOpacity style={{ position: "absolute", right: 10, bottom: 10 }}>
-    <Text onPress={() => props.navigation.navigate("AddPondScreen")}>
-        <MaterialCommunityIcons name="plus-circle" color="skyblue" size={70} />
-    </Text>
-</TouchableOpacity>
+        <Text onPress={() => props.navigation.navigate("AddPondScreen")}>
+            <MaterialCommunityIcons name="plus-circle" color="skyblue" size={70} />
+        </Text>
+    </TouchableOpacity>
 )
 
 export const Ponds = (props) => {
-    const {currentUser, ponds} = props;
+    const { currentUser, ponds } = props;
 
     if (ponds === null) {
         return (
@@ -91,8 +91,8 @@ export const Ponds = (props) => {
             </SafeAreaView>
         )
     }
-    
-    if(ponds.length === 0) {
+
+    if (ponds.length === 0) {
         return (
             <SafeAreaView style={styles.container}>
                 <Text style={styles.screenTitle}>Ponds</Text>
@@ -127,7 +127,7 @@ export const Ponds = (props) => {
                     renderItem={renderItem}
                 />
             </ScrollView>
-                <AddPondButton props={props}/>
+            <AddPondButton props={props} />
         </SafeAreaView>
     )
 }

@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Dimensions, Button } from "react-native";
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
 import { ScrollView } from "react-native-gesture-handler";
@@ -15,7 +15,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
-export const PondRealtime = ({ route }) => {
+export const PondRealtime = ({ navigation, route }) => {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -554,6 +554,11 @@ export const PondRealtime = ({ route }) => {
         return (
             <SafeAreaView style={styles.container}>
                 <ScrollView>
+                <View>
+                    <Button title="History"
+                        onPress={() => { navigation.navigate("History", { pondDetails: pondDetails }) }}
+                    />
+                </View>
                     <View style={{ paddingBottom: 10 }}>
                         <PondDetails pondDetails={pondDetails} pondStatus={pondStatus} />
                     </View>
@@ -575,6 +580,11 @@ export const PondRealtime = ({ route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
+            <View>
+                <Button title="History"
+                    onPress={() => { navigation.navigate("History", { pondDetails: pondDetails }) }}
+                />
+            </View>
                 <View style={{ paddingBottom: 10 }}>
                     <PondDetails pondDetails={pondDetails} pondStatus={pondStatus} />
                 </View>

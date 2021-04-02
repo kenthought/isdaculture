@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchUser, fetchPonds, fetchNotification, fetchFluctuation } from "../redux/actions";
+import { fetchUser, fetchPonds, fetchNotification } from "../redux/actions";
 import { bindActionCreators } from "redux";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,7 +15,6 @@ export class Home extends Component {
         this.props.fetchUser()
         this.props.fetchPonds()
         this.props.fetchNotification()
-        this.props.fetchFluctuation()
     }
     render = () => {
         // const { currentUser } = this.props
@@ -40,12 +39,6 @@ export class Home extends Component {
                                 <MaterialCommunityIcons name="bell" color={color} size={26} />
                             )
                         }} />
-                <Tab.Screen name="History" component={HistoryScreen}
-                    options={{
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="clock" color={color} size={26} />
-                        )
-                    }} />
             </Tab.Navigator>
         )
     }
@@ -55,6 +48,6 @@ const mapToStateProps = state => ({
     currentUser: state.userState.currentUser
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchUser, fetchPonds, fetchNotification, fetchFluctuation }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchUser, fetchPonds, fetchNotification }, dispatch)
   
 export default connect(mapToStateProps, mapDispatchToProps)(Home);

@@ -86,7 +86,7 @@ export class App extends Component {
             <Stack.Screen name="AddPondScreen" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
             <Stack.Screen name="PondRealtime" component={PondRealtimeScreen} navigation={this.props.navigation} options={{ title: 'Dashboard' }} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
-            <Stack.Screen name="History" navigation={this.props.navigation} component={HistoryScreen} />
+            <Stack.Screen name="History" component={HistoryScreen} navigation={this.props.navigation} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
