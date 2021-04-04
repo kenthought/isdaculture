@@ -553,7 +553,8 @@ export const Dashboard = ({ navigation, route }) => {
 
     if (pondTemp === "-127.00") {
         return (
-            <SafeAreaView style={styles.container}><View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+            <SafeAreaView style={styles.container}>
+                <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10 }}>
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
                     <Text style={{ textAlign: "center" }}>
@@ -600,7 +601,7 @@ export const Dashboard = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-        <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10 }}>
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
                     <Text style={{ textAlign: "center" }}>

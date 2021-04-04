@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useEffect } from "react/cjs/react.development";
 
 
-export const PondDetails = ({pondDetails, pondStatus}) => {
+export const PondDetails = ({ pondDetails, pondStatus }) => {
     const [prodTimeline, setProdTimeline] = useState("")
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
@@ -168,15 +168,24 @@ export const PondDetails = ({pondDetails, pondStatus}) => {
     }, [prodTimeline])
 
     return (
-        <View style={{ padding: 20 }}>
-            <Text style={styles.screenTitle}>{pondDetails.pondName}</Text>
-            <Text>Production Status: {pondStatus}</Text>
-            <Text>Total Stock: {pondDetails.fishCapacity}</Text>
-            <Text>{(pondDetails.pondLength * pondDetails.pondWidth)} square meters</Text>
-            <Text>Production Timeline: </Text>
-            <Text>{prodTimeline}</Text>
-            <Text>{pondHarvestDate(pondDetails.pondDateStarted, pondDetails.expectedTimeline)}</Text>
+        <View style={{ padding: 20, flexDirection: "column" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.screenTitle}>{pondDetails.pondName}</Text>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ fontWeight: "bold" }}>Production Status: <Text style={{ fontWeight: "normal" }}>{pondStatus}</Text></Text>
+                    <Text style={{ fontWeight: "bold" }}>Total Stock: <Text style={{ fontWeight: "normal" }}>{pondDetails.fishCapacity}</Text></Text>
+                    <Text>{(pondDetails.pondLength * pondDetails.pondWidth)} square meters</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ fontWeight: "bold" }}>Production Timeline: </Text>
+                    <Text>{prodTimeline}</Text>
+                    <Text>{pondHarvestDate(pondDetails.pondDateStarted, pondDetails.expectedTimeline)}</Text>
+                </View>
+            </View>
         </View>
+
     )
 }
 
