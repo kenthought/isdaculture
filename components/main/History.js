@@ -1,58 +1,43 @@
-import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ScrollView, } from "react-native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, StatusBar, ScrollView, } from "react-native";
+import { LineChart } from "react-native-chart-kit"
+import firebase from "firebase";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { connect } from "react-redux";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
 
-const Item = ({ pondName, fluctuationDate, temperatureStatus, pondProductionStatus, duration }) => (
-  <View style={{ marginVertical: 10 }}>
-    <View style={{ flexDirection: "column" }}>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text>Pond Name: </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{pondName}</Text>
-        </View>
+const Item = ({ fluctuationDate, pondProductionStatus, temperatureStatus, duration }) => (
+  <View style={{ flexDirection: "column" }}>
+    <View style={{ marginVertical: 8, flexDirection: "row" }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ textAlign: "center" }}>{monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}</Text>
+        <Text style={{ textAlign: "center" }}>{formatAMPM(fluctuationDate)}</Text>
       </View>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text>Fluctuation Date: </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}</Text>
-          <Text>{formatAMPM(new Date(fluctuationDate))}</Text>
-        </View>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ textAlign: "center" }}>{pondProductionStatus}</Text>
       </View>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text>Temperature Status: </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{temperatureStatus}</Text>
-        </View>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ textAlign: "center" }}>{temperatureStatus}</Text>
       </View>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text>Production Status: </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{pondProductionStatus}</Text>
-        </View>
-      </View>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text>Duration: </Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text>{duration}</Text>
-        </View>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ textAlign: "center" }}>{secondsToHms(duration)}</Text>
       </View>
     </View>
   </View>
 )
+
+function secondsToHms(d) {
+  d = Number(d);
+  var h = Math.floor(d / 3600);
+  var m = Math.floor(d % 3600 / 60);
+  var s = Math.floor(d % 3600 % 60);
+
+  var hDisplay = h > 0 ? h + (h == 1 ? " hr, " : " hrs, ") : "";
+  var mDisplay = m > 0 ? m + (m == 1 ? " min, " : " mins, ") : "";
+  var sDisplay = s > 0 ? s + (s == 1 ? " s" : " s") : "";
+  return hDisplay + mDisplay + sDisplay;
+}
 
 const formatAMPM = (date) => {
   var formatTime = new Date(date)
@@ -67,26 +52,79 @@ const formatAMPM = (date) => {
   return strTime;
 }
 
-export const History = (props) => {
-  const [pondDetails, setPondDetails] = useState("")
-  const { currentUser, fluctuation } = props;
+export const History = ({ route }) => {
+  const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
+  const [pondDetails, setPondDetails] = useState(route.params.pondDetails)
+  const [fluctuation, setFluctuation] = useState(null)
+  console.log(pondDetails)
+
+  const fetchFluctuation = () => {
+    const uid = firebase.auth().currentUser.uid
+    firebase.database()
+      .ref("fluctuation")
+      .child(uid + "/" + pondDetails.pondID)
+      .on("value", (snapshot) => {
+        setFluctuation(snapshot.val())
+      }, (errorObject) => {
+        console.log(errorObject.code + " : " + errorObject.message)
+      })
+  }
+
+  const PondHistoryTempChart = () => (
+    <View style={{ marginTop: 30 }}>
+      <Text>{pondDetails.pondName} Average Temperature</Text>
+      <LineChart
+        data={{
+          labels: ["Mar. 31", "Apr. 1", "Apr. 2", "Apr. 3", "Apr. 4",],
+          datasets: [
+            {
+              data: [29, 27, 25, 28, 27]
+            }
+          ]
+        }}
+        width={chartWidth - 18} // from react-native
+        height={220}
+        yAxisSuffix="°C"
+        yAxisInterval={1} // optional, defaults to 1
+        chartConfig={{
+          backgroundColor: "white",
+          backgroundGradientFrom: "white",
+          backgroundGradientTo: "white",
+          decimalPlaces: 2, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(81, 122, 219, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(50, 50, 50, ${opacity})`,
+          style: {
+            borderRadius: 16
+          },
+          propsForDots: {
+            r: "6",
+            strokeWidth: "2",
+            stroke: "grey"
+          }
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+    </View>
+  )
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', () => {
+      setChartWidth(Dimensions.get("window").width)
+    });
+    if (fluctuation === null) {
+      fetchFluctuation()
+    }
+    console.log(fluctuation)
+    return () => { }
+  }, [fluctuation])
 
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.screenTitle}>{pondDetails.pondName} History</Text>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
-          <Text style={{ color: "lightgrey", fontSize: 20 }}>No history</Text>
-        </View>
-      </SafeAreaView>
-    )
-  }
-
-  if (fluctuation.length === 0) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.screenTitle}>Fluctuation History</Text>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <Text>Fetching...</Text>
         </View>
@@ -96,20 +134,37 @@ export const History = (props) => {
 
   const renderItem = ({ item }) => (
     <Item
-      pondName={fluctuation[item].pondName}
       fluctuationDate={fluctuation[item].fluctuationDate}
-      temperatureStatus={fluctuation[item].temperatureStatus}
       pondProductionStatus={fluctuation[item].pondProductionStatus}
+      temperatureStatus={fluctuation[item].temperatureStatus}
       duration={fluctuation[item].duration}
     />
   );
-
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View>
-          <Text style={styles.screenTitle}>Fluctuation History</Text>
+          <PondHistoryTempChart />
+        </View>
+        <View style={{ marginVertical: 10 }}>
+          <Text style={{ fontWeight:"bold" }}>Fluctuation History</Text>
+        </View>
+        <View style={{ marginVertical: 8, flexDirection: "column" }}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
+            </View>
+          </View>
         </View>
         <FlatList
           data={Object.keys(fluctuation)}
@@ -120,22 +175,12 @@ export const History = (props) => {
   )
 }
 
-const mapToStateProps = state => ({
-  currentUser: state.userState.currentUser,
-  fluctuation: state.userState.fluctuation
-})
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    marginHorizontal: 16
-  },
-  screenTitle: {
-    marginVertical: 12,
-    fontSize: 30,
-    fontWeight: 'bold'
-  },
+    paddingVertical: 7,
+    paddingHorizontal: 10
+  }
 })
 
-export default connect(mapToStateProps, null)(History);
+export default History;

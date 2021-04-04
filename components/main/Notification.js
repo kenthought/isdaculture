@@ -4,13 +4,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { connect } from "react-redux";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"]
+    "July", "August", "September", "October", "November", "December"]
 
-const Item = ({pondName, date, notification}) => (
+const Item = ({ pondName, date, notification }) => (
     <View style={{ marginVertical: 10 }}>
         <View style={{ flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text>{pondName} - {monthNames[new Date(date).getMonth()] + " " + new Date(date).getDate() + ", " + new Date(date).getFullYear()} {formatAMPM(date)}</Text>
+                <Text style={{ fontWeight: "bold" }}>{pondName} - {monthNames[new Date(date).getMonth()] + " " + new Date(date).getDate() + ", " + new Date(date).getFullYear()} {formatAMPM(date)}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text>{notification}</Text>
@@ -30,33 +30,33 @@ const formatAMPM = (date) => {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ampm;
     return strTime;
-  }
+}
 
 export const Notification = (props) => {
     const { currentUser, notification } = props;
 
     if (notification === null) {
         return (
-          <SafeAreaView style={styles.container}>
-            <Text style={styles.screenTitle}>Notification</Text>
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
-              <Text style={{ color: "lightgrey", fontSize: 20 }}>No Notification</Text>
-            </View>
-          </SafeAreaView>
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.screenTitle}>Notification</Text>
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
+                    <Text style={{ color: "lightgrey", fontSize: 20 }}>No Notification</Text>
+                </View>
+            </SafeAreaView>
         )
-      }
-    
-      if (notification.length === 0) {
+    }
+
+    if (notification.length === 0) {
         return (
-          <SafeAreaView style={styles.container}>
-            <Text style={styles.screenTitle}>Notification</Text>
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <Text>Fetching...</Text>
-            </View>
-          </SafeAreaView>
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.screenTitle}>Notification</Text>
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <Text>Fetching...</Text>
+                </View>
+            </SafeAreaView>
         )
-      }
+    }
 
     const renderItem = ({ item }) => (
         <Item

@@ -1,10 +1,11 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import PondDetails from "./PondDetails";
 
 Notifications.setNotificationHandler({
@@ -15,7 +16,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
-export const PondRealtime = ({ route }) => {
+export const Dashboard = ({ navigation, route }) => {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -552,7 +553,32 @@ export const PondRealtime = ({ route }) => {
 
     if (pondTemp === "-127.00") {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container}><View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="fish" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center"  }}>Fish Behavior</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="clock" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center" }}>History</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="format-list-bulleted" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center"  }}>Action Log</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
                 <ScrollView>
                     <View style={{ paddingBottom: 10 }}>
                         <PondDetails pondDetails={pondDetails} pondStatus={pondStatus} />
@@ -574,6 +600,32 @@ export const PondRealtime = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+        <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="fish" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center"  }}>Fish Behavior</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="clock" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center" }}>History</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={() => navigation.navigate("History", { pondDetails: pondDetails })}>
+                    <Text style={{ textAlign: "center" }}>
+                        <MaterialCommunityIcons name="format-list-bulleted" color="skyblue" size={30} />
+                    </Text>
+                    <Text style={{ color: "skyblue", textAlign: "center"  }}>Action Log</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
             <ScrollView>
                 <View style={{ paddingBottom: 10 }}>
                     <PondDetails pondDetails={pondDetails} pondStatus={pondStatus} />
@@ -651,4 +703,4 @@ async function registerForPushNotificationsAsync() {
     return token;
 }
 
-export default PondRealtime
+export default Dashboard

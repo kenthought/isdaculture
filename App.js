@@ -8,7 +8,7 @@ import LoginScreen from './components/auth/Login';
 import RegisterScreen from './components/auth/Register';
 import HomeScreen from "./components/Home";
 import PondsScreen from "./components/main/Ponds"
-import PondRealtimeScreen from "./components/main/PondRealtime"
+import DashboardScreen from "./components/main/Dashboard"
 import AddPondScreen from "./components/main/AddPond"
 import NotificationScreen from "./components/main/Notification"
 import HistoryScreen from "./components/main/History"
@@ -84,9 +84,9 @@ export class App extends Component {
             <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Ponds" component={PondsScreen} navigation={this.props.navigation} />
             <Stack.Screen name="AddPondScreen" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
-            <Stack.Screen name="PondRealtime" component={PondRealtimeScreen} navigation={this.props.navigation} options={{ title: 'Dashboard' }} />
+            <Stack.Screen name="Dashboard" component={DashboardScreen} navigation={this.props.navigation} options={{ title: 'Dashboard' }} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
-            <Stack.Screen name="History" navigation={this.props.navigation} component={HistoryScreen} />
+            <Stack.Screen name="History" component={HistoryScreen} navigation={this.props.navigation} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
