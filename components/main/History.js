@@ -126,17 +126,6 @@ export const History = ({ route }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
-          <Text style={{ color: "lightgrey", fontSize: 20 }}>No history</Text>
-        </View>
-      </SafeAreaView>
-    )
-  }
-
-  if (fluctuation.length === 0) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
           <Text>Fetching...</Text>
         </View>
       </SafeAreaView>
