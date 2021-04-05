@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, ScrollView, } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator } from "react-native";
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -143,7 +143,6 @@ export const History = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
         <View>
           <PondHistoryTempChart />
         </View>
@@ -170,7 +169,6 @@ export const History = ({ route }) => {
           data={Object.keys(fluctuation).reverse()}
           renderItem={renderItem}
         />
-      </ScrollView>
     </SafeAreaView>
   )
 }

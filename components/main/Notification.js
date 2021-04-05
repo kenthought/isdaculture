@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, ScrollView, } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from "react-redux";
 
@@ -69,15 +69,13 @@ export const Notification = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <View>
-                    <Text style={styles.screenTitle}>Notification</Text>
-                </View>
-                <FlatList
-                    data={Object.keys(notification).reverse()}
-                    renderItem={renderItem}
-                />
-            </ScrollView>
+            <View>
+                <Text style={styles.screenTitle}>Notification</Text>
+            </View>
+            <FlatList
+                data={Object.keys(notification).reverse()}
+                renderItem={renderItem}
+            />
         </SafeAreaView>
     )
 }
@@ -99,9 +97,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     horizontal: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      padding: 10
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
     }
 })
 
