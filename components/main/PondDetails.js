@@ -172,13 +172,13 @@ export const PondDetails = ({ pondDetails, pondStatus }) => {
             <View style={{ flex: 1 }}>
                 <Text style={styles.screenTitle}>{pondDetails.pondName}</Text>
             </View>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", width: "95%" }}>
+                <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Status: <Text style={{ fontWeight: "normal" }}>{pondStatus}</Text></Text>
                     <Text style={{ fontWeight: "bold" }}>Total Stock: <Text style={{ fontWeight: "normal" }}>{pondDetails.fishCapacity}</Text></Text>
                     <Text>{(pondDetails.pondLength * pondDetails.pondWidth)} square meters</Text>
                 </View>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Timeline: </Text>
                     <Text>{prodTimeline}</Text>
                     <Text>{pondHarvestDate(pondDetails.pondDateStarted, pondDetails.expectedTimeline)}</Text>

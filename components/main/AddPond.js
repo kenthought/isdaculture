@@ -320,8 +320,8 @@ export const AddPond = ( {navigation} ) => {
                         )}
 
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                        <View style={{ flex: 1, marginRight: 3 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <View style={{ flex: 1, width: "80%", marginRight: 3 }}>
                             <TextInput
                                 label="Pond Length"
                                 style={styles.input}
@@ -330,7 +330,7 @@ export const AddPond = ( {navigation} ) => {
                                 onChangeText={pondLength => setPondLength(pondLength)}
                                 value={pondLength} />
                         </View>
-                        <View style={{ flex: 1, marginLeft: 3 }}>
+                        <View style={{ flex: 1, width: "80%", marginLeft: 3}}>
                             <TextInput
                                 label="Pond Width"
                                 style={styles.input}
