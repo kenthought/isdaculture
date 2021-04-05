@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/auth/Login';
@@ -59,10 +59,8 @@ export class App extends Component {
     const { loaded, loggedIn } = this.state;
     if (!loaded) {
       return (
-        <View style={styles.container}>
-          <Text>
-            Loading...
-          </Text>
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="large" color="skyblue" />
         </View>
       )
     }
@@ -100,6 +98,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   }
 });
 

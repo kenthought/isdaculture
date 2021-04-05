@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, StatusBar, ScrollView, } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, ScrollView, } from "react-native";
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -125,8 +125,8 @@ export const History = ({ route }) => {
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text>Fetching...</Text>
+        <View style={styles.horizontal}>
+          <ActivityIndicator size="small" color="skyblue" />
         </View>
       </SafeAreaView>
     )
@@ -167,7 +167,7 @@ export const History = ({ route }) => {
           </View>
         </View>
         <FlatList
-          data={Object.keys(fluctuation)}
+          data={Object.keys(fluctuation).reverse()}
           renderItem={renderItem}
         />
       </ScrollView>
@@ -180,6 +180,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 7,
     paddingHorizontal: 10
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   }
 })
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, TouchableOpacity, ScrollView, } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, TouchableOpacity, ScrollView, } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ProgressBar } from 'react-native-paper'
 import { connect } from "react-redux";
@@ -96,9 +96,10 @@ export const Ponds = (props) => {
         return (
             <SafeAreaView style={styles.container}>
                 <Text style={styles.screenTitle}>Ponds</Text>
-                <View style={{ alignItems: "center", justifyContent: "center" }}>
-                    <Text>Fetching...</Text>
-                </View>
+                
+        <View style={styles.horizontal}>
+          <ActivityIndicator size="small" color="skyblue" />
+        </View>
                 <AddPondButton props={props} />
             </SafeAreaView>
         )
@@ -123,7 +124,7 @@ export const Ponds = (props) => {
                     <Text style={styles.screenTitle}>Ponds</Text>
                 </View>
                 <FlatList
-                    data={Object.keys(ponds)}
+                    data={Object.keys(ponds).reverse()}
                     renderItem={renderItem}
                 />
             </ScrollView>
@@ -148,6 +149,11 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold'
     },
+    horizontal: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      padding: 10
+    }
 })
 
 export default connect(mapToStateProps, null)(Ponds)

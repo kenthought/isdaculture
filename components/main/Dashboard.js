@@ -34,7 +34,6 @@ export const Dashboard = ({ navigation, route }) => {
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
     const [fluctuationDate, setFluctuationDate] = useState("")
-    // const [refreshIntervalId, setRefreshIntervalId] = useState('')
 
     const RealtimeTemp = () => (
         <View style={{ alignItems: "center", padding: 5 }}>
