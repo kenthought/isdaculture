@@ -6,7 +6,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PondsScreen from "./main/Ponds"
 import NotificationScreen from "./main/Notification";
-import HistoryScreen from "./main/History";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +29,7 @@ export class Home extends Component {
                 <Tab.Screen name="Ponds" component={PondsScreen}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="home" color={color} size={26} />
+                            <MaterialCommunityIcons name="waves" color={color} size={26} />
                         )
                     }} />
                     <Tab.Screen name="Notification" component={NotificationScreen}

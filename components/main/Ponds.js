@@ -82,7 +82,9 @@ export const Ponds = (props) => {
     if (ponds === null) {
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.screenTitle}>Ponds</Text>
+                <View>
+                    <Text style={styles.screenTitle}>Ponds</Text>
+                </View>
                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                     <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
                     <Text style={{ color: "lightgrey", fontSize: 20 }}>No ponds</Text>
@@ -96,10 +98,9 @@ export const Ponds = (props) => {
         return (
             <SafeAreaView style={styles.container}>
                 <Text style={styles.screenTitle}>Ponds</Text>
-                
-        <View style={styles.horizontal}>
-          <ActivityIndicator size="small" color="skyblue" />
-        </View>
+                <View style={styles.horizontal}>
+                    <ActivityIndicator size="small" color="skyblue" />
+                </View>
                 <AddPondButton props={props} />
             </SafeAreaView>
         )
@@ -119,13 +120,13 @@ export const Ponds = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-                <View>
-                    <Text style={styles.screenTitle}>Ponds</Text>
-                </View>
-                <FlatList
-                    data={Object.keys(ponds).reverse()}
-                    renderItem={renderItem}
-                />
+            <View>
+                <Text style={styles.screenTitle}>Ponds</Text>
+            </View>
+            <FlatList
+                data={Object.keys(ponds).reverse()}
+                renderItem={renderItem}
+            />
             <AddPondButton props={props} />
         </SafeAreaView>
     )
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: StatusBar.currentHeight,
-        marginHorizontal: 16
+        marginHorizontal: 16,
     },
     screenTitle: {
         marginVertical: 12,
@@ -148,9 +149,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     horizontal: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      padding: 10
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
     }
 })
 
