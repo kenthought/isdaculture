@@ -1,15 +1,12 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView } from "react-native";
+import { View, StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
 import { Text, Drawer, Avatar } from "react-native-paper";
-import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from "firebase";
 
 export const DrawerContent = (props) => {
-
-    const signOut = () => {
-        firebase.auth().signOut()
-    }
+    const signOut = () => { firebase.auth().signOut() }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -25,20 +22,32 @@ export const DrawerContent = (props) => {
                         size={70}
                     />
                     <Text style={{ fontWeight: "bold", fontSize: 20, marginVertical: 3 }}>Jomari Ondap</Text>
-                    <Text style={{ fontColor: "skyblue" }}>test@gmail.com</Text>
+                    <Text style={{ color: "skyblue" }}>test@gmail.com</Text>
                 </View>
-            <Drawer.Section style={{ marginTop: 10 }}>
-                        <DrawerItem 
-                            icon={({color, size}) => (
-                                <MaterialCommunityIcons 
-                                    name="home"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Home"
-                        />
-            </Drawer.Section>
+                <Drawer.Section style={{ marginTop: 10 }}>
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <MaterialCommunityIcons
+                                name="home"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Home"
+                        onPress={() => props.navigation.navigate("Home")}
+                    />
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <MaterialCommunityIcons
+                                name="account"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Account"
+                        onPress={() => props.navigation.navigate("Account")}
+                    />
+                </Drawer.Section>
             </DrawerContentScrollView>
             <Drawer.Section style={{ marginBottom: 15, borderTopColor: "#f4f4f4", borderTopWidth: 1 }}>
                 <DrawerItem
@@ -65,3 +74,5 @@ const style = StyleSheet.create({
         textAlign: 'center',
     },
 })
+
+export default DrawerContent

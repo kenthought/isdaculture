@@ -28,12 +28,14 @@ const Login = ({ navigation }) => {
           theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
           keyboardType="email-address"
           label="Email"
-          onChangeText={email => setEmail(email)} />
+          onChangeText={email => setEmail(email)} 
+          value={email}/>
         <TextInput style={styles.input}
           theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
           label="Password"
           secureTextEntry={true}
-          onChangeText={password => setPassword(password)} />
+          onChangeText={password => setPassword(password)} 
+          value={password}/>
       </View>
       <View style={{ marginTop: 30, marginBottom: 20 }}>
         <Button color='skyblue' title="Login" onPress={() => logIn(email, password)} />

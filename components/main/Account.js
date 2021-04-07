@@ -1,12 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet, StatusBar, SafeAreaView } from "react-native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from "react-redux";
 
 export const Account = (props) => {
     const currentUser = props.currentUser
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.screenTitle}>Account</Text>
+        <View style={{ flexDirection: "row", marginVertical: 10 }}>
+            <View style={{ flex: 1 }}>
+                <Text onPress={() => props.navigation.toggleDrawer()}>
+                    <MaterialCommunityIcons name="menu" size={45} />
+                </Text>
+            </View>
+            <View style={{ flex: 3 }}>
+                <Text style={styles.screenTitle}>Account</Text>
+            </View>
+        </View>
             <View>
                 <Text>{currentUser.firstName} Profile</Text>
             </View>
@@ -24,7 +34,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16
     },
     screenTitle: {
-        marginVertical: 12,
         fontSize: 30,
         fontWeight: 'bold'
     }

@@ -38,7 +38,16 @@ export const Notification = (props) => {
     if (notification === null) {
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.screenTitle}>Notification</Text>
+                <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text onPress={() => props.navigation.toggleDrawer()}>
+                            <MaterialCommunityIcons name="menu" size={45} />
+                        </Text>
+                    </View>
+                    <View style={{ flex: 3 }}>
+                        <Text style={styles.screenTitle}>Notification</Text>
+                    </View>
+                </View>
                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                     <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
                     <Text style={{ color: "lightgrey", fontSize: 20 }}>No Notification</Text>
@@ -50,8 +59,16 @@ export const Notification = (props) => {
     if (notification.length === 0) {
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.screenTitle}>Notification</Text>
-
+                <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text onPress={() => props.navigation.toggleDrawer()}>
+                            <MaterialCommunityIcons name="menu" size={45} />
+                        </Text>
+                    </View>
+                    <View style={{ flex: 3 }}>
+                        <Text style={styles.screenTitle}>Notification</Text>
+                    </View>
+                </View>
                 <View style={styles.horizontal}>
                     <ActivityIndicator size="large" color="skyblue" />
                 </View>
@@ -69,8 +86,15 @@ export const Notification = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View>
-                <Text style={styles.screenTitle}>Notification</Text>
+            <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                <View style={{ flex: 1 }}>
+                    <Text onPress={() => props.navigation.toggleDrawer()}>
+                        <MaterialCommunityIcons name="menu" size={45} />
+                    </Text>
+                </View>
+                <View style={{ flex: 3 }}>
+                    <Text style={styles.screenTitle}>Notification</Text>
+                </View>
             </View>
             <FlatList
                 data={Object.keys(notification).reverse()}
@@ -92,7 +116,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16
     },
     screenTitle: {
-        marginVertical: 12,
         fontSize: 30,
         fontWeight: 'bold'
     },

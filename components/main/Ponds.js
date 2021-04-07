@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, TouchableOpacity, Button } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ProgressBar } from 'react-native-paper'
 import { connect } from "react-redux";
@@ -82,8 +82,15 @@ export const Ponds = (props) => {
     if (ponds === null) {
         return (
             <SafeAreaView style={styles.container}>
-                <View>
-                    <Text style={styles.screenTitle}>Ponds</Text>
+                <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text onPress={() => props.navigation.toggleDrawer()}>
+                            <MaterialCommunityIcons name="menu" size={45} />
+                        </Text>
+                    </View>
+                    <View style={{ flex: 3 }}>
+                        <Text style={styles.screenTitle}>Ponds</Text>
+                    </View>
                 </View>
                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                     <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
@@ -97,7 +104,16 @@ export const Ponds = (props) => {
     if (ponds.length === 0) {
         return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.screenTitle}>Ponds</Text>
+                <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                    <View style={{ flex: 1 }}>
+                        <Text onPress={() => props.navigation.toggleDrawer()}>
+                            <MaterialCommunityIcons name="menu" size={45} />
+                        </Text>
+                    </View>
+                    <View style={{ flex: 3 }}>
+                        <Text style={styles.screenTitle}>Ponds</Text>
+                    </View>
+                </View>
                 <View style={styles.horizontal}>
                     <ActivityIndicator size="small" color="skyblue" />
                 </View>
@@ -120,8 +136,15 @@ export const Ponds = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View>
-                <Text style={styles.screenTitle}>Ponds</Text>
+            <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                <View style={{ flex: 1 }}>
+                    <Text onPress={() => props.navigation.toggleDrawer()}>
+                        <MaterialCommunityIcons name="menu" size={45} />
+                    </Text>
+                </View>
+                <View style={{ flex: 3 }}>
+                    <Text style={styles.screenTitle}>Ponds</Text>
+                </View>
             </View>
             <FlatList
                 data={Object.keys(ponds).reverse()}
@@ -144,7 +167,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
     screenTitle: {
-        marginVertical: 12,
         fontSize: 30,
         fontWeight: 'bold'
     },
