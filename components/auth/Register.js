@@ -41,26 +41,35 @@ const Register = () => {
                     <TextInput style={styles.input}
                         theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
                         label="First Name"
-                        onChangeText={firstName => setFirstName(firstName)} />
+                        onChangeText={firstName => setFirstName(firstName)} 
+                        value={firstName}
+                        />
                     <TextInput style={styles.input}
                         theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
                         label="Last Name"
-                        onChangeText={lastName => setLastName(lastName)} />
+                        onChangeText={lastName => setLastName(lastName)} 
+                        value={lastName}
+                        />
                     <TextInput style={styles.input}
                         theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
                         label="Phone number"
                         keyboardType="phone-pad"
-                        onChangeText={phoneNumber => setPhoneNumber(phoneNumber)} />
+                        onChangeText={phoneNumber => setPhoneNumber(phoneNumber)} 
+                        value={phoneNumber}/>
                     <TextInput style={styles.input}
                         theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
                         label="Email"
                         keyboardType="email-address"
-                        onChangeText={email => setEmail(email)} />
+                        onChangeText={email => setEmail(email)} 
+                        value={email}
+                        />
                     <TextInput style={styles.input}
                         theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
                         label="Password"
                         secureTextEntry={true}
-                        onChangeText={password => setPassword(password)} />
+                        onChangeText={password => setPassword(password)} 
+                        value={password}
+                        />
                 </View>
                 {required && (
                     <View style={{ alignItems: "center", justifyContent: "center", marginTop: 15 }}>
