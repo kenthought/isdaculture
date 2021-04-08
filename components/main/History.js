@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator } from "react-native";
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
@@ -54,9 +53,21 @@ const formatAMPM = (date) => {
 
 export const History = ({ route }) => {
   const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
-  const [pondDetails, setPondDetails] = useState(route.params.pondDetails)
+  const [pondDetails, setPondDetails] = useState(null)
   const [fluctuation, setFluctuation] = useState(null)
   console.log(pondDetails)
+  
+  const fetchPondDetails = () => {
+    const uid = firebase.auth().currentUser.uid
+    firebase.database()
+        .ref("ponds")
+        .child(uid + "/" + route.params.pondID)
+        .on("value", (snapshot) => {
+            setPondDetails(snapshot.val())
+        }, (errorObject) => {
+            console.log(errorObject.code + " : " + errorObject.message)
+        })
+}
 
   const fetchFluctuation = () => {
     const uid = firebase.auth().currentUser.uid
@@ -115,10 +126,14 @@ export const History = ({ route }) => {
     Dimensions.addEventListener('change', () => {
       setChartWidth(Dimensions.get("window").width)
     });
+
+    if(pondDetails === null) {
+      fetchPondDetails()
+    }
     if (fluctuation === null) {
       fetchFluctuation()
     }
-    console.log(fluctuation)
+
     return () => { }
   }, [fluctuation])
 
@@ -182,7 +197,7 @@ const styles = StyleSheet.create({
   horizontal: {
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 10
+    padding: "50%"
   }
 })
 
