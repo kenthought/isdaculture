@@ -4,9 +4,21 @@ import { Text, Drawer, Avatar } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from "firebase";
+import { useSelector } from "react-redux";
 
 export const DrawerContent = (props) => {
     const signOut = () => { firebase.auth().signOut() }
+    const currentUser = useSelector(state => state.userState.currentUser)
+
+    if (currentUser === null) {
+        return (
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={style.container, style.horizontal}>
+                    <ActivityIndicator size="small" color="skyblue" />
+                </View>
+            </SafeAreaView>
+        )
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -21,8 +33,8 @@ export const DrawerContent = (props) => {
                         }}
                         size={70}
                     />
-                    <Text style={{ fontWeight: "bold", fontSize: 20, marginVertical: 3 }}>Jomari Ondap</Text>
-                    <Text style={{ color: "skyblue" }}>test@gmail.com</Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 20, marginVertical: 5 }}>{currentUser.firstName} {currentUser.lastName}</Text>
+                    <Text style={{ color: "skyblue" }}>{currentUser.email}</Text>
                 </View>
                 <Drawer.Section style={{ marginTop: 10 }}>
                     <DrawerItem
@@ -67,12 +79,23 @@ export const DrawerContent = (props) => {
 }
 
 const style = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    horizontal: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      padding: 10
+    },
     title: {
         fontWeight: 'bold',
         fontSize: 30,
         color: 'skyblue',
         textAlign: 'center',
-    },
+    }
 })
 
 export default DrawerContent
