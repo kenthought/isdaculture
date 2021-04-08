@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
@@ -545,7 +545,7 @@ export const Dashboard = ({ navigation, route }) => {
     if (pondDetails === null) {
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <Text>Loading...</Text>
+                <ActivityIndicator size="large" color="skyblue" />
             </View>
         )
     }

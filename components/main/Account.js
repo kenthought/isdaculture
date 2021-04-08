@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet, StatusBar, SafeAreaView } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const Account = (props) => {
-    const currentUser = props.currentUser
+    const currentUser = useSelector(state => state.userState.currentUser)
     return (
         <SafeAreaView style={styles.container}>
         <View style={{ flexDirection: "row", marginVertical: 10 }}>
@@ -39,8 +39,4 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapToStateProps = state => ({
-    currentUser: state.userState.currentUser
-})
-
-export default connect(mapToStateProps, null)(Account)
+export default Account

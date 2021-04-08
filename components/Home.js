@@ -29,13 +29,13 @@ export class Home extends Component {
                 <Tab.Screen name="Ponds" component={PondsScreen}
                     options={{
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="waves" color={color} size={26} />
+                            <MaterialCommunityIcons name="waves" color={color} size={size} />
                         )
                     }} />
                     <Tab.Screen name="Notification" component={NotificationScreen}
                         options={{
                             tabBarIcon: ({ color, size }) => (
-                                <MaterialCommunityIcons name="bell" color={color} size={26} />
+                                <MaterialCommunityIcons name="bell" color={color} size={size} />
                             )
                         }} />
             </Tab.Navigator>
