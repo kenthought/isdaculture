@@ -51,29 +51,17 @@ const formatAMPM = (date) => {
   return strTime;
 }
 
-export const History = ({ route }) => {
+export const History = (props) => {
   const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
-  const [pondDetails, setPondDetails] = useState(null)
   const [fluctuation, setFluctuation] = useState(null)
-  console.log(pondDetails)
   
-  const fetchPondDetails = () => {
-    const uid = firebase.auth().currentUser.uid
-    firebase.database()
-        .ref("ponds")
-        .child(uid + "/" + route.params.pondID)
-        .on("value", (snapshot) => {
-            setPondDetails(snapshot.val())
-        }, (errorObject) => {
-            console.log(errorObject.code + " : " + errorObject.message)
-        })
-}
+  console.log(props)
 
   const fetchFluctuation = () => {
     const uid = firebase.auth().currentUser.uid
     firebase.database()
       .ref("fluctuation")
-      .child(uid + "/" + pondDetails.pondID)
+      .child(uid + "/" + props.props.pondID)
       .on("value", (snapshot) => {
         setFluctuation(snapshot.val())
       }, (errorObject) => {
@@ -83,7 +71,7 @@ export const History = ({ route }) => {
 
   const PondHistoryTempChart = () => (
     <View style={{ marginTop: 30 }}>
-      <Text>{pondDetails.pondName} Average Temperature</Text>
+      <Text>{props.props.pondName} Average Temperature</Text>
       <LineChart
         data={{
           labels: ["Mar. 31", "Apr. 1", "Apr. 2", "Apr. 3", "Apr. 4",],
@@ -127,9 +115,6 @@ export const History = ({ route }) => {
       setChartWidth(Dimensions.get("window").width)
     });
 
-    if(pondDetails === null) {
-      fetchPondDetails()
-    }
     if (fluctuation === null) {
       fetchFluctuation()
     }
@@ -158,32 +143,32 @@ export const History = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-        <View>
-          <PondHistoryTempChart />
-        </View>
-        <View style={{ marginVertical: 10 }}>
-          <Text style={{ fontWeight:"bold" }}>Fluctuation History</Text>
-        </View>
-        <View style={{ marginVertical: 8, flexDirection: "column" }}>
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
-            </View>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
-            </View>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
-            </View>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
-            </View>
+      <View>
+        <PondHistoryTempChart />
+      </View>
+      <View style={{ marginVertical: 10 }}>
+        <Text style={{ fontWeight: "bold" }}>Fluctuation History</Text>
+      </View>
+      <View style={{ marginVertical: 8, flexDirection: "column" }}>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
           </View>
         </View>
-        <FlatList
-          data={Object.keys(fluctuation).reverse()}
-          renderItem={renderItem}
-        />
+      </View>
+      <FlatList
+        data={Object.keys(fluctuation).reverse()}
+        renderItem={renderItem}
+      />
     </SafeAreaView>
   )
 }

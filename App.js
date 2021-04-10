@@ -90,7 +90,7 @@ export class App extends Component {
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="AddPond" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
             <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: "Dashboard", headerStyle: {backgroundColor: "skyblue"}}}/>
-            <Stack.Screen name="PondMonitoring" component={PondMonitoringScreen} />
+            <Stack.Screen name="PondMonitoring" component={PondMonitoringScreen} navigation={this.props.navigation} />
             <Stack.Screen name="History" component={HistoryScreen} />
             <Stack.Screen name="FishBehavior" component={FishBehaviorScreen} />
             <Stack.Screen name="ActionLog" component={ActionLogScreen} />

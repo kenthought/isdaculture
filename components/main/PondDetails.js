@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import { useEffect } from "react/cjs/react.development";
 
 
-export const PondDetails = ({ pondDetails, pondStatus }) => {
+export const PondDetails = ({ props, pondStatus }) => {
     const [prodTimeline, setProdTimeline] = useState("")
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
+    console.log(props)
 
     const calcProdTimeline = () => {
         const currentDate = new Date()
-        const expectedDate = new Date(pondDetails.pondDateStarted)
-        expectedDate.setDate(expectedDate.getDate() + parseInt(pondDetails.expectedTimeline));
+        const expectedDate = new Date(props.pondDateStarted)
+        expectedDate.setDate(expectedDate.getDate() + parseInt(props.expectedTimeline));
         var leftover = Math.abs((currentDate.getTime() - expectedDate.getTime()) / 1000)
         var prodTimelineFormat = ""
         if (leftover <= 0) {
@@ -167,21 +169,29 @@ export const PondDetails = ({ pondDetails, pondStatus }) => {
         return () => { };
     }, [prodTimeline])
 
+    if(props.props === null) {
+        return (
+            <View style={{padding: 50}}>
+                <ActivityIndicator size="small" color="skyblue" />
+            </View>
+        )
+    }
+
     return (
         <View style={{ padding: 20, flexDirection: "column" }}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.screenTitle}>{pondDetails.pondName}</Text>
+                <Text style={styles.screenTitle}>{props.pondName}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", width: "95%" }}>
                 <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Status: <Text style={{ fontWeight: "normal" }}>{pondStatus}</Text></Text>
-                    <Text style={{ fontWeight: "bold" }}>Total Stock: <Text style={{ fontWeight: "normal" }}>{pondDetails.fishCapacity}</Text></Text>
-                    <Text>{(pondDetails.pondLength * pondDetails.pondWidth)} square meters</Text>
+                    <Text style={{ fontWeight: "bold" }}>Total Stock: <Text style={{ fontWeight: "normal" }}>{props.fishCapacity}</Text></Text>
+                    <Text>{(props.pondLength * props.pondWidth)} square meters</Text>
                 </View>
                 <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Timeline: </Text>
                     <Text>{prodTimeline}</Text>
-                    <Text>{pondHarvestDate(pondDetails.pondDateStarted, pondDetails.expectedTimeline)}</Text>
+                    <Text>{pondHarvestDate(props.pondDateStarted, props.expectedTimeline)}</Text>
                 </View>
             </View>
         </View>
