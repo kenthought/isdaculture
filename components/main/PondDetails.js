@@ -8,7 +8,6 @@ export const PondDetails = ({ props, pondStatus }) => {
     const [prodTimeline, setProdTimeline] = useState("")
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
-    console.log(props)
 
     const calcProdTimeline = () => {
         const currentDate = new Date()

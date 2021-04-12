@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator } from "react-native";
 import { LineChart } from "react-native-chart-kit"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import firebase from "firebase";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -54,8 +55,6 @@ const formatAMPM = (date) => {
 export const History = (props) => {
   const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
   const [fluctuation, setFluctuation] = useState(null)
-  
-  console.log(props)
 
   const fetchFluctuation = () => {
     const uid = firebase.auth().currentUser.uid
@@ -64,14 +63,15 @@ export const History = (props) => {
       .child(uid + "/" + props.props.pondID)
       .on("value", (snapshot) => {
         setFluctuation(snapshot.val())
+        console.log(snapshot)
       }, (errorObject) => {
         console.log(errorObject.code + " : " + errorObject.message)
       })
   }
 
   const PondHistoryTempChart = () => (
-    <View style={{ marginTop: 30 }}>
-      <Text>{props.props.pondName} Average Temperature</Text>
+    <View style={{ marginVertical: 10, borderBottomWidth: 1, borderBottomColor: "#f4f4f4" }}>
+      <Text style={{ fontWeight: "bold" }}>{props.props.pondName} AVERAGE TEMPERATURE</Text>
       <LineChart
         data={{
           labels: ["Mar. 31", "Apr. 1", "Apr. 2", "Apr. 3", "Apr. 4",],
@@ -93,7 +93,7 @@ export const History = (props) => {
           color: (opacity = 1) => `rgba(81, 122, 219, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(50, 50, 50, ${opacity})`,
           style: {
-            borderRadius: 16
+            borderRadius: 16,
           },
           propsForDots: {
             r: "6",
@@ -118,15 +118,26 @@ export const History = (props) => {
     if (fluctuation === null) {
       fetchFluctuation()
     }
-
+    console.log(fluctuation)
     return () => { }
   }, [fluctuation])
+  // console.log(fluctuation))
+  if (fluctuation !==null && fluctuation.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.horizontal}>
+          <ActivityIndicator size="small" color="skyblue" />
+        </View>
+      </SafeAreaView>
+    )
+  }
 
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.horizontal}>
-          <ActivityIndicator size="small" color="skyblue" />
+          <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
+          <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
         </View>
       </SafeAreaView>
     )
@@ -143,11 +154,12 @@ export const History = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <PondHistoryTempChart />
+      <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
+        <Text style={styles.screenTitle}>History</Text>
       </View>
+      <PondHistoryTempChart />
       <View style={{ marginVertical: 10 }}>
-        <Text style={{ fontWeight: "bold" }}>Fluctuation History</Text>
+        <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
       </View>
       <View style={{ marginVertical: 8, flexDirection: "column" }}>
         <View style={{ flexDirection: "row" }}>
@@ -177,7 +189,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 7,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+  },
+  screenTitle: {
+    fontSize: 30,
+    fontWeight: 'bold'
   },
   horizontal: {
     flexDirection: "row",
