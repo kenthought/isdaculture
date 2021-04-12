@@ -11,7 +11,8 @@ export const register = (firstName, lastName, phoneNumber, email, password, setR
                 firstName: firstName,
                 lastName: lastName,
                 phoneNumber: phoneNumber,
-                email: email
+                email: email,
+                createdAt: new Date().toString()
             })
             console.log(result)
         })
