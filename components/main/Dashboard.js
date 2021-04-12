@@ -5,6 +5,7 @@ import { PondMonitoring } from "./PondMonitoring";
 import FishBehaviorScreen from "./FishBehavior";
 import { History } from "./History";
 import ActionLogScreen from "./ActionLog";
+import { TabBar } from "./TabBar"
 import firebase from "firebase"
 
 const Tab = createMaterialTopTabNavigator();
@@ -24,28 +25,28 @@ export function Dashboard({ route }) {
       })
   }
 
-    if(pondDetails === undefined) {
-        return (
-            <View style={{padding: "50%"}}>
-                <ActivityIndicator size="small" color="skyblue" />
-            </View>
-        )
-    }
-
-    useEffect(() => {
-      if (pondDetails === null) {
-        fetchPondDetails()
-      }
-    }, [pondDetails])
-
-    // component={PondMonitoringScreen}
+  if (pondDetails === undefined) {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="PondMonitoring" children={()=><PondMonitoring props={pondDetails} />} />
-        <Tab.Screen name="FishBehavior" component={FishBehaviorScreen} />
-        <Tab.Screen name="History"  children={()=><History props={pondDetails} />} />        
-        <Tab.Screen name="ActionLog" component={ActionLogScreen} />
-      </Tab.Navigator>
+      <View style={{ padding: "50%" }}>
+        <ActivityIndicator size="small" color="skyblue" />
+      </View>
+    )
+  }
+
+  useEffect(() => {
+    if (pondDetails === null) {
+      fetchPondDetails()
+    }
+  }, [pondDetails])
+
+  // component={PondMonitoringScreen}
+  return (
+    <Tab.Navigator initialRouteName="Pond Monitoring" tabBar={props => <TabBar {...props} />}>
+      <Tab.Screen name="Pond Monitoring" children={() => <PondMonitoring props={pondDetails} />} />
+      <Tab.Screen name="Fish Behavior" component={FishBehaviorScreen} />
+      <Tab.Screen name="History" children={() => <History props={pondDetails} />} />
+      <Tab.Screen name="Action Log" component={ActionLogScreen} />
+    </Tab.Navigator>
   );
 }
 
