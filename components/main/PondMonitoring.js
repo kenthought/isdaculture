@@ -2,9 +2,10 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, Dimensions, ActivityIndicator } from "react-native";
-import { LineChart } from "react-native-chart-kit"
 import firebase from "firebase";
 import PondDetails from "./PondDetails";
+import { RealtimeTemp, RealtimeDO } from "./PondRealtimeData"
+import { PondRealtimeChart } from "./PondRealtimeChart"
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -14,7 +15,7 @@ Notifications.setNotificationHandler({
     }),
 });
 
-export const PondMonitoring = ( props ) => {
+export const PondMonitoring = (props) => {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -27,67 +28,10 @@ export const PondMonitoring = ( props ) => {
     const [pondTempStatus, setPondTempStatus] = useState("")
     const [pondDOStatus, setPondDOStatus] = useState("")
     const [tempAndProdStatus, setTempAndProdStatus] = useState([])
-    const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
+    // const [chartWidth, setChartWidth] = useState()
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
     const [fluctuationDate, setFluctuationDate] = useState("")
-
-    const RealtimeTemp = () => (
-        <View style={{ alignItems: "center", padding: 5 }}>
-            <Text>Pond Temperature</Text>
-            <Text style={{ fontSize: 25, marginVertical: 10 }}>{pondTemp}°C</Text>
-            <Text>{pondTempStatus}</Text>
-        </View>
-    )
-
-    const RealtimeDO = () => (
-        <View style={{ alignItems: "center", padding: 5 }}>
-            <Text>Pond Dissolved Oxygen</Text>
-            <Text style={{ fontSize: 25, marginVertical: 10 }}>{pondDO}mg/L</Text>
-            <Text>{pondDOStatus}</Text>
-        </View>
-    )
-
-    const PondRealtimeTempChart = () => (
-        <View style={{ marginTop: 30 }}>
-            <Text style={{ fontWeight: "bold" }}>{props.props.pondName} TEMPERATURE</Text>
-            <LineChart
-                data={{
-                    labels: chartLabel,
-                    datasets: [
-                        {
-                            data: chartData
-                        }
-                    ]
-                }}
-                width={chartWidth - 18} // from react-native
-                height={220}
-                yAxisSuffix="°C"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                    backgroundColor: "white",
-                    backgroundGradientFrom: "white",
-                    backgroundGradientTo: "white",
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(81, 122, 219, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(50, 50, 50, ${opacity})`,
-                    style: {
-                        borderRadius: 16
-                    },
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "grey"
-                    }
-                }}
-                bezier
-                style={{
-                    marginVertical: 8,
-                    borderRadius: 16
-                }}
-            />
-        </View>
-    )
 
     const fetchRealtimeData = () => {
         firebase.database()
@@ -202,7 +146,7 @@ export const PondMonitoring = ( props ) => {
     }
 
     const sendPondNotificationAndFluctuationRecording = () => {
-        console.log(prevPondTemp, pondTemp, fluctuationDate)
+        // console.log(prevPondTemp, pondTemp, fluctuationDate)
         var tempArr = []
         if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
@@ -534,43 +478,25 @@ export const PondMonitoring = ( props ) => {
         )
     }
 
-    if (pondTemp === "-127.00") {
-        return (
-            <SafeAreaView style={styles.container}>
-                <ScrollView>
-                    <View style={{ paddingBottom: 10 }}>
-                        <PondDetails props={props.props} pondStatus={pondStatus} />
-                    </View>
-                    <View style={{ flexDirection: "row", marginVertical: 10 }}>
-                        <View style={{ alignItems: "center", padding: 5 }}>
-                            <Text>Pond Temperature</Text>
-                            <Text style={{ fontSize: 25, marginVertical: 4 }}>Error</Text>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <RealtimeDO />
-                        </View>
-                    </View>
-                    <PondRealtimeTempChart />
-                </ScrollView>
-            </SafeAreaView>
-        )
-    }
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
-                <View style={{ paddingBottom: 10 }}>
+                <View>
                     <PondDetails props={props.props} pondStatus={pondStatus} />
                 </View>
-                <View style={{ flexDirection: "row", marginVertical: 10 }}>
-                    <View style={{ flex: 1 }}>
-                        <RealtimeTemp />
+                <View style={{ flexDirection: "column", marginTop: 10, padding: 10, backgroundColor: "white" }}>
+                    <View style={{ flex: 1, flexDirection: "row" }}>
+                        <View style={{ flex: 1 }}>
+                            <RealtimeTemp pondTemp={pondTemp} pondTempStatus={pondTempStatus} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <RealtimeDO pondDO={pondDO} pondDOStatus={pondDOStatus} />
+                        </View>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <RealtimeDO />
+                        <PondRealtimeChart pondDetails={props.props} chartData={chartData} chartLabel={chartLabel} />
                     </View>
                 </View>
-                <PondRealtimeTempChart />
             </ScrollView>
         </SafeAreaView>
     )
