@@ -63,7 +63,6 @@ export const History = (props) => {
       .child(uid + "/" + props.props.pondID)
       .on("value", (snapshot) => {
         setFluctuation(snapshot.val())
-        console.log(snapshot)
       }, (errorObject) => {
         console.log(errorObject.code + " : " + errorObject.message)
       })
@@ -122,7 +121,7 @@ export const History = (props) => {
     return () => { }
   }, [fluctuation])
   // console.log(fluctuation))
-  if (fluctuation !==null && fluctuation.length === 0) {
+  if (fluctuation !== null && fluctuation.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.horizontal}>
@@ -135,7 +134,7 @@ export const History = (props) => {
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.horizontal}>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
           <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
         </View>
@@ -157,30 +156,33 @@ export const History = (props) => {
       <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
         <Text style={styles.screenTitle}>History</Text>
       </View>
-      <PondHistoryTempChart />
-      <View style={{ marginVertical: 10 }}>
-        <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
-      </View>
-      <View style={{ marginVertical: 8, flexDirection: "column" }}>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
+      <View style={{ padding: 10 }}>
+        <PondHistoryTempChart />
+        <View style={{ marginVertical: 10 }}>
+          <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
+        </View>
+        <View style={{ marginVertical: 8, flexDirection: "column" }}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
+            </View>
           </View>
         </View>
+        <FlatList
+          data={Object.keys(fluctuation).reverse()}
+          renderItem={renderItem}
+        />
+
       </View>
-      <FlatList
-        data={Object.keys(fluctuation).reverse()}
-        renderItem={renderItem}
-      />
     </SafeAreaView>
   )
 }
