@@ -70,7 +70,7 @@ const pondProgress = (pondDateStarted, expectedTimeline) => {
 
 const AddPondButton = ({ props }) => (
     <TouchableOpacity style={{ position: "absolute", right: 10, bottom: 10 }}>
-        <Text onPress={() => props.navigation.navigate("AddPondScreen")}>
+        <Text onPress={() => props.navigation.navigate("AddPond")}>
             <MaterialCommunityIcons name="plus-circle" color="skyblue" size={70} />
         </Text>
     </TouchableOpacity>
@@ -117,7 +117,6 @@ export const Ponds = (props) => {
                 <View style={styles.horizontal}>
                     <ActivityIndicator size="small" color="skyblue" />
                 </View>
-                <AddPondButton props={props} />
             </SafeAreaView>
         )
     }

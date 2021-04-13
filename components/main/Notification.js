@@ -70,7 +70,7 @@ export const Notification = (props) => {
                     </View>
                 </View>
                 <View style={styles.horizontal}>
-                    <ActivityIndicator size="large" color="skyblue" />
+                    <ActivityIndicator size="small" color="skyblue" />
                 </View>
             </SafeAreaView>
         )

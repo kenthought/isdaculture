@@ -88,7 +88,7 @@ const style = StyleSheet.create({
     horizontal: {
       flexDirection: "row",
       justifyContent: "space-around",
-      padding: 10
+      padding: "50%"
     },
     title: {
         fontWeight: 'bold',

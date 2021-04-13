@@ -9,10 +9,13 @@ import RegisterScreen from './components/auth/Register';
 import DrawerNavigatorScreen from "./components/main/DrawerNavigator";
 import DrawerContentScreen from "./components/main/DrawerContent";
 import PondsScreen from "./components/main/Ponds";
-import DashboardScreen from "./components/main/Dashboard";
+import PondMonitoringScreen from "./components/main/PondMonitoring";
 import AddPondScreen from "./components/main/AddPond";
 import NotificationScreen from "./components/main/Notification";
 import HistoryScreen from "./components/main/History";
+import DashboardScreen from './components/main/Dashboard';
+import FishBehaviorScreen from "./components/main/FishBehavior";
+import ActionLogScreen from "./components/main/ActionLog";
 import { Provider } from 'react-redux';
 import store from "./redux/store";
 
@@ -33,7 +36,7 @@ firebase.initializeApp(firebaseConfig)
 const Stack = createStackNavigator()
 
 export class App extends Component {
-  constructor(props) {  
+  constructor(props) {
     super(props)
     this.state = {
       loaded: false
@@ -76,7 +79,7 @@ export class App extends Component {
         </NavigationContainer>
       )
     }
-    
+
     return (
       <Provider store={store}>
         <NavigationContainer>
@@ -85,9 +88,12 @@ export class App extends Component {
             <Stack.Screen name="DrawerContent" component={DrawerContentScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Ponds" component={PondsScreen} navigation={this.props.navigation} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
-            <Stack.Screen name="AddPondScreen" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
-            <Stack.Screen name="Dashboard" component={DashboardScreen} navigation={this.props.navigation} options={{ title: 'Dashboard' }} />
-            <Stack.Screen name="History" component={HistoryScreen} navigation={this.props.navigation} />
+            <Stack.Screen name="AddPond" component={AddPondScreen} navigation={this.props.navigation} options={{ title: 'Add Pond' }} />
+            <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: "Dashboard", headerStyle: {backgroundColor: "skyblue"}}}/>
+            <Stack.Screen name="PondMonitoring" component={PondMonitoringScreen} navigation={this.props.navigation} />
+            <Stack.Screen name="History" component={HistoryScreen} />
+            <Stack.Screen name="FishBehavior" component={FishBehaviorScreen} />
+            <Stack.Screen name="ActionLog" component={ActionLogScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
