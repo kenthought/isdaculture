@@ -39,14 +39,13 @@ export function Dashboard({ route }) {
     }
   }, [pondDetails])
 
-  // component={PondMonitoringScreen}
   return (
     <Tab.Navigator initialRouteName="Pond Monitoring" tabBar={props => <TabBar {...props} />}>
       <Tab.Screen name="Pond Monitoring" children={() => <PondMonitoring props={pondDetails} />} />
       <Tab.Screen name="Fish Behavior" component={FishBehaviorScreen} />
       <Tab.Screen name="History" children={() => <History props={pondDetails} />} />
       <Tab.Screen name="Action Log" component={ActionLogScreen} />
-    </Tab.Navigator>
+    </Tab.Navigator> 
   );
 }
 
