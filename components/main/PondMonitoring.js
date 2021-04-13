@@ -439,9 +439,9 @@ export const PondMonitoring = (props) => {
     }
 
     useEffect(() => {
-        Dimensions.addEventListener('change', () => {
-            setChartWidth(Dimensions.get("window").width)
-        });
+        // Dimensions.addEventListener('change', () => {
+        //     setChartWidth(Dimensions.get("window").width)
+        // });
 
         if (props.props === null) {
 
