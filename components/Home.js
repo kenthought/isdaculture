@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchUser, fetchPonds, fetchNotification } from "../redux/actions";
 import { bindActionCreators } from "redux";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PondsScreen from "./main/Ponds"
+import AddPondScreen from "./main/AddPond"
 import NotificationScreen from "./main/Notification";
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export class Home extends Component {
     componentDidMount = () => {
@@ -25,17 +26,26 @@ export class Home extends Component {
         //     )
         // }
         return (
-            <Tab.Navigator>
+            <Tab.Navigator shifting={true}>
                 <Tab.Screen name="Ponds" component={PondsScreen}
                     options={{
+                        tabBarLabel: "PONDS",
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="waves" color={color} size={size} />
+                            <MaterialCommunityIcons name="waves" color={color} size={26} />
                         )
                     }} />
+                    <Tab.Screen name="Add Pond" component={AddPondScreen}
+                        options={{
+                            tabBarLabel: "",
+                            tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
+                            )
+                        }} />
                     <Tab.Screen name="Notification" component={NotificationScreen}
                         options={{
+                            tabBarLabel: "NOTIFICATION",
                             tabBarIcon: ({ color, size }) => (
-                                <MaterialCommunityIcons name="bell" color={color} size={size} />
+                                <MaterialCommunityIcons name="bell" color={color} size={26} />
                             )
                         }} />
             </Tab.Navigator>
