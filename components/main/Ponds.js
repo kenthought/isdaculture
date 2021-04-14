@@ -7,53 +7,56 @@ import { connect } from "react-redux";
 const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"]
 
-const Item = ({ pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedTimeline, props }) => (
-    <TouchableOpacity onPress={() => props.navigation.navigate("Dashboard", { pondID: pondID })}>
-        <View style={{ marginVertical: 10 }}>
-            <View style={{ flexDirection: "column" }}>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Pond Name: </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{pondName}</Text>
-                    </View>
+const color = ["white", "#03709c"]
+const textColor = ["#000000", "#ffff"]
+
+const Item = ({ index, pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedTimeline, props }) => (
+    <TouchableOpacity
+        style={{ marginVertical: 3, backgroundColor: color[index % color.length], paddingVertical: 15, paddingHorizontal: 30, borderRadius: 30, }}
+        onPress={() => props.navigation.navigate("Dashboard", { pondID: pondID })}>
+        <View style={{ flexDirection: "column" }}>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>Pond Name: </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Address: </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{pondAddress}</Text>
-                    </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{pondName}</Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Fish Capacity: </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{fishCapacity}</Text>
-                    </View>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>Address: </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Date Started: </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{monthNames[new Date(pondDateStarted).getMonth()] + " " + new Date(pondDateStarted).getDate() + ", " + new Date(pondDateStarted).getFullYear()}</Text>
-                    </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{pondAddress}</Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <View style={{ flex: 1 }}>
-                        <Text>Progress: </Text>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text>{(((pondProgress(pondDateStarted, parseInt(expectedTimeline)))) < 0 ? "0%" : (pondProgress(pondDateStarted, parseInt(expectedTimeline))) >= 100 ? "100%" : Math.round((pondProgress(pondDateStarted, parseInt(expectedTimeline)))).toString() + "%")}</Text>
-                    </View>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>Fish Capacity: </Text>
                 </View>
-                <View style={{ marginVertical: 8, border: 1, borderTopColor: "lightgrey" }}>
-                    <ProgressBar progress={((pondProgress(pondDateStarted, parseInt(expectedTimeline))) / 100)} color={"skyblue"} />
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{fishCapacity}</Text>
                 </View>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>Date Started: </Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{monthNames[new Date(pondDateStarted).getMonth()] + " " + new Date(pondDateStarted).getDate() + ", " + new Date(pondDateStarted).getFullYear()}</Text>
+                </View>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>Progress: </Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{(((pondProgress(pondDateStarted, parseInt(expectedTimeline)))) < 0 ? "0%" : (pondProgress(pondDateStarted, parseInt(expectedTimeline))) >= 100 ? "100%" : Math.round((pondProgress(pondDateStarted, parseInt(expectedTimeline)))).toString() + "%")}</Text>
+                </View>
+            </View>
+            <View style={{ marginVertical: 8 }}>
+                <ProgressBar progress={((pondProgress(pondDateStarted, parseInt(expectedTimeline))) / 100)} color={color[index % color.length === 0 ? 1 : 0]} />
             </View>
         </View>
     </TouchableOpacity>
@@ -68,13 +71,13 @@ const pondProgress = (pondDateStarted, expectedTimeline) => {
     return ((currentDate - dateStarted) / (expectedDate - dateStarted)) * 100;
 }
 
-const AddPondButton = ({ props }) => (
-    <TouchableOpacity style={{ position: "absolute", right: 10, bottom: 10 }}>
-        <Text onPress={() => props.navigation.navigate("AddPond")}>
-            <MaterialCommunityIcons name="plus-circle" color="skyblue" size={70} />
-        </Text>
-    </TouchableOpacity>
-)
+// const AddPondButton = ({ props }) => (
+//     <TouchableOpacity style={{ position: "absolute", right: 10, bottom: 10 }}>
+//         <Text onPress={() => props.navigation.navigate("AddPond")}>
+//             <MaterialCommunityIcons name="plus-circle" color="skyblue" size={70} />
+//         </Text>
+//     </TouchableOpacity>
+// )
 
 export const Ponds = (props) => {
     const { currentUser, ponds } = props;
@@ -121,8 +124,9 @@ export const Ponds = (props) => {
         )
     }
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item, index }) => (
         <Item
+            index={index}
             pondID={ponds[item].pondID}
             pondName={ponds[item].pondName}
             pondAddress={ponds[item].pondAddress}
@@ -149,7 +153,7 @@ export const Ponds = (props) => {
                 data={Object.keys(ponds).reverse()}
                 renderItem={renderItem}
             />
-            <AddPondButton props={props} />
+            {/* <AddPondButton props={props} /> */}
         </SafeAreaView>
     )
 }

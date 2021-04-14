@@ -8,7 +8,6 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
 
 const Item = ({ fluctuationDate, pondProductionStatus, temperatureStatus, duration }) => (
-  <View style={{ flexDirection: "column" }}>
     <View style={{ marginVertical: 8, flexDirection: "row" }}>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text style={{ textAlign: "center" }}>{monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}</Text>
@@ -24,7 +23,6 @@ const Item = ({ fluctuationDate, pondProductionStatus, temperatureStatus, durati
         <Text style={{ textAlign: "center" }}>{secondsToHms(duration)}</Text>
       </View>
     </View>
-  </View>
 )
 
 function secondsToHms(d) {
@@ -161,7 +159,8 @@ export const History = (props) => {
         <View style={{ marginVertical: 10 }}>
           <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
         </View>
-        <View style={{ marginVertical: 8, flexDirection: "column" }}>
+      </View>
+        <View style={{ padding: 5, marginVertical: 8, flexDirection: "column", backgroundColor: "skyblue" }}>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
@@ -180,9 +179,8 @@ export const History = (props) => {
         <FlatList
           data={Object.keys(fluctuation).reverse()}
           renderItem={renderItem}
+          style={{ backgroundColor: "white", padding: 10 }}
         />
-
-      </View>
     </SafeAreaView>
   )
 }

@@ -7,7 +7,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"]
 
 const Item = ({ pondName, date, notification }) => (
-    <View style={{ marginVertical: 10 }}>
+    <View style={{ padding: 5, marginVertical: 10 }}>
         <View style={{ flexDirection: "column" }}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={{ fontWeight: "bold" }}>{pondName} - {monthNames[new Date(date).getMonth()] + " " + new Date(date).getDate() + ", " + new Date(date).getFullYear()} {formatAMPM(date)}</Text>
@@ -76,8 +76,9 @@ export const Notification = (props) => {
         )
     }
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item, index }) => (
         <Item
+            index={index}
             pondName={notification[item].pondName}
             date={notification[item].date}
             notification={notification[item].notification}
@@ -99,6 +100,7 @@ export const Notification = (props) => {
             <FlatList
                 data={Object.keys(notification).reverse()}
                 renderItem={renderItem}
+                style={{ padding: 10, backgroundColor: "white", borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
             />
         </SafeAreaView>
     )

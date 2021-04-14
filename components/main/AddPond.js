@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { SafeAreaView, View, StyleSheet, StatusBar, Text, Button, Pressable, ScrollView } from "react-native";
 import { RadioButton, TextInput } from "react-native-paper";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from "firebase";
 
 export const AddPond = ( {navigation} ) => {
@@ -156,8 +157,11 @@ export const AddPond = ( {navigation} ) => {
 
     return (
         <SafeAreaView style={styles.container}>
+        <View style={{ justifyContent:"center", alignItems: "center", marginVertical: 10 }}>
+                <Text style={styles.screenTitle}>Add Ponds</Text>
+        </View>
             <ScrollView>
-                <View style={{ padding: 20 }}>
+                <View style={{ padding: 20, backgroundColor: "white", borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
                     <TextInput 
                         label="Name of Pond"
                         style={styles.input}
@@ -411,6 +415,10 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: StatusBar.currentHeight,
         marginHorizontal: 16
+    },
+    screenTitle: {
+        fontSize: 30,
+        fontWeight: 'bold'
     },
     input: {
         marginVertical: 9
