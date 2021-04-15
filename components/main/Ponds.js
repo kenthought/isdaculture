@@ -28,7 +28,7 @@ const Item = ({ index, pondID, pondName, pondAddress, fishCapacity, pondDateStar
                     <Text style={{ color: textColor[index % textColor.length] }}>Address: </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                    <Text style={{ color: textColor[index % textColor.length] }}>{pondAddress}</Text>
+                    <Text lineBreakMode="tail" numberOfLines={1} style={{ color: textColor[index % textColor.length] }}>{pondAddress}</Text>
                 </View>
             </View>
             <View style={{ flex: 1, flexDirection: "row" }}>
