@@ -35,10 +35,15 @@ export class Home extends Component {
                         )
                     }} />
                     <Tab.Screen name="Add Pond" component={AddPondScreen}
+                    // listeners={({ navigation }) => ({
+                    //     tabPress: event => {
+                    //         event.preventDefault();
+                    //     }
+                    // })}
                         options={{
                             tabBarLabel: "",
                             tabBarIcon: ({ color, size }) => (
-                                <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
+                                <MaterialCommunityIcons name="plus-circle" color={color} size={36} />
                             )
                         }} />
                     <Tab.Screen name="Notification" component={NotificationScreen}
