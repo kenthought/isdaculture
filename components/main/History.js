@@ -109,17 +109,46 @@ export const History = (props) => {
     </View>
   )
 
-  const InformationModal = () => (
+  const ProdStatusModal = () => (
     <View>
       <Modal
         isVisible={isModalVisible}
         onSwipeComplete={() => toggleModal()}
         onBackdropPress={() => toggleModal()}
         swipeDirection="down">
-        <View style={{ flex: 1, padding: 10, backgroundColor: "white", borderRadius: 20 }}>
-        <View style={{ marginVertical: 15, borderBottomWidth: 1, opacity: .3, marginHorizontal: 150 }} />
-          <Text style={{ fontWeight: "bold" }} >Warning 1 (Hot) </Text>
-          <Text>Temperature is greater than 34 but not more than 37</Text>
+        <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
+          <View style={{ marginVertical: 15, borderBottomWidth: 1, opacity: .3, marginHorizontal: 150 }} />
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Production Status</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Normal </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Warning 1 (Hot) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Warning 1 (Cold) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Warning 2 (Hot) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Warning 2 (Cold) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Critical (Hot) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
+          <View style={{ marginVertical: 7 }}>
+            <Text style={{ fontWeight: "bold" }} >Critical (Cold) </Text>
+            <Text>Temperature is greater than 34 but not more than 37</Text>
+          </View>
         </View>
       </Modal>
     </View>
@@ -184,10 +213,10 @@ export const History = (props) => {
           </View>
           <View style={{ flex: 1, justifyContent: "center" }}>
             <TouchableOpacity onPress={toggleModal}>
-              <MaterialCommunityIcons name="circle-help" size={20} />
+              <MaterialCommunityIcons name="information-outline" size={20} />
             </TouchableOpacity>
           </View>
-          <InformationModal />
+          <ProdStatusModal />
         </View>
       </View>
       <View style={{ padding: 5, marginVertical: 8, flexDirection: "column", backgroundColor: "skyblue" }}>
