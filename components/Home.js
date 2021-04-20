@@ -43,7 +43,7 @@ export class Home extends Component {
                         options={{
                             tabBarLabel: "",
                             tabBarIcon: ({ color, size }) => (
-                                <MaterialCommunityIcons name="plus-circle" color={color} size={36} />
+                                <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
                             )
                         }} />
                     <Tab.Screen name="Notification" component={NotificationScreen}
