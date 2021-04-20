@@ -158,7 +158,7 @@ export const AddPond = ( {navigation} ) => {
     return (
         <SafeAreaView style={styles.container}>
         <View style={{ justifyContent:"center", alignItems: "center", marginVertical: 10 }}>
-                <Text style={styles.screenTitle}>Add Ponds</Text>
+                <Text style={styles.screenTitle}>Add Pond</Text>
         </View>
             <ScrollView>
                 <View style={{ padding: 20, backgroundColor: "white", borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
