@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, TouchableOpacity, Pressable } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
 import { LineChart } from "react-native-chart-kit"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import firebase from "firebase";
@@ -80,7 +80,7 @@ export const History = (props) => {
             }
           ]
         }}
-        width={chartWidth - 18} // from react-native
+        width={chartWidth} // from react-native
         height={220}
         yAxisSuffix="°C"
         yAxisInterval={1} // optional, defaults to 1
@@ -119,7 +119,7 @@ export const History = (props) => {
         <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
           <View style={{ marginVertical: 15, borderBottomWidth: 1, opacity: .3, marginHorizontal: 150 }} />
           <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Production Status</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }} >Production Status</Text>
           </View>
           <View style={{ marginVertical: 7 }}>
             <Text style={{ fontWeight: "bold" }} >Normal </Text>
@@ -205,8 +205,10 @@ export const History = (props) => {
       <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
         <Text style={styles.screenTitle}>History</Text>
       </View>
-      <View style={{ padding: 10 }}>
+      <ScrollView style={{ padding: 10, backgroundColor: "white" }}>
+        <View style={{ padding: 3 }}>
         <PondHistoryTempChart />
+        </View>
         <View style={{ flexDirection: "row", marginVertical: 10 }}>
           <View style={{ flex: 1 }}>
             <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
@@ -218,7 +220,6 @@ export const History = (props) => {
           </View>
           <ProdStatusModal />
         </View>
-      </View>
       <View style={{ padding: 5, marginVertical: 8, flexDirection: "column", backgroundColor: "skyblue" }}>
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -240,6 +241,7 @@ export const History = (props) => {
         renderItem={renderItem}
         style={{ backgroundColor: "white", padding: 10 }}
       />
+      </ScrollView>
     </SafeAreaView>
   )
 }
