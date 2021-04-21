@@ -99,7 +99,6 @@ export const Ponds = (props) => {
                     <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
                     <Text style={{ color: "lightgrey", fontSize: 20 }}>No ponds</Text>
                 </View>
-                <AddPondButton props={props} />
             </SafeAreaView>
         )
     }
@@ -153,7 +152,6 @@ export const Ponds = (props) => {
                 data={Object.keys(ponds).reverse()}
                 renderItem={renderItem}
             />
-            {/* <AddPondButton props={props} /> */}
         </SafeAreaView>
     )
 }
