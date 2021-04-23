@@ -35,6 +35,11 @@ export class Home extends Component {
                         )
                     }} />
                     <Tab.Screen name="Add Pond" component={AddPondScreen}
+                    // listeners={({ navigation }) => ({
+                    //     tabPress: event => {
+                    //         event.preventDefault();
+                    //     }
+                    // })}
                         options={{
                             tabBarLabel: "",
                             tabBarIcon: ({ color, size }) => (

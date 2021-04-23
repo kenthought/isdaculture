@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, SafeAreaView, Text } from "react-native";
 
 export const ActionLog = () => {
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>

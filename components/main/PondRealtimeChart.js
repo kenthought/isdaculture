@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit"
 import { View, Text, Dimensions } from "react-native";
 
 export const PondRealtimeChart = ({ pondDetails, chartData, chartLabel }) => {
+    const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
+
+    useEffect(() => {
+        Dimensions.addEventListener('change', () => {
+            setChartWidth(Dimensions.get("window").width)
+        });
+    }, [chartWidth])
+
     return (
         <View style={{ marginTop: 30 }}>
             <Text style={{ fontWeight: "bold" }}>{pondDetails.pondName} TEMPERATURE</Text>
@@ -15,7 +23,7 @@ export const PondRealtimeChart = ({ pondDetails, chartData, chartLabel }) => {
                         }
                     ]
                 }}
-                width={Dimensions.get("window").width} // from react-native
+                width={chartWidth} // from react-native
                 height={220}
                 yAxisSuffix="°C"
                 yAxisInterval={1} // optional, defaults to 1

@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { useEffect } from "react/cjs/react.development";
-
 
 export const PondDetails = ({ props, pondStatus }) => {
     const [prodTimeline, setProdTimeline] = useState("")
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
 
-    const calcProdTimeline = () => {
+        const calcProdTimeline = () => {
         const currentDate = new Date()
         const expectedDate = new Date(props.pondDateStarted)
         expectedDate.setDate(expectedDate.getDate() + parseInt(props.expectedTimeline));
@@ -30,7 +28,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                     var minutes = Math.floor(leftover / 60);
                     leftover -= (minutes * 60);
                     leftover = leftover.toFixed(0)
-
+                    
                     if (mos > 0) {
                         if (mos == 1) {
                             prodTimelineFormat += mos + " mo";
@@ -105,7 +103,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                             prodTimelineFormat += hours + " hr";
                         }
                         else if (hours > 1) {
-                            prodTimelineFormat += days + " hrs";
+                            prodTimelineFormat += hours + " hrs";
                         }
 
                         if (minutes == 1) {
@@ -123,7 +121,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                         }
                     }
 
-                    if (minutes > 0 && mos == 0 && days == 0 && hours) {
+                    if (minutes > 0 && mos == 0 && days == 0 && hours == 0) {
                         if (minutes == 1) {
                             prodTimelineFormat += minutes + " min";
                         }

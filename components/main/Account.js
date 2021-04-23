@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
+import { View, StyleSheet, SafeAreaView, StatusBar, ScrollView } from "react-native";
 import { Text, Avatar } from "react-native-paper";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ export const Account = (props) => {
                     <Text style={styles.screenTitle}>Account</Text>
                 </View>
             </View>
+            <ScrollView>
             <View style={{ flexDirection: "row", marginVertical: 10, borderBottomWidth: 1, borderBottomColor: "#f4f4f4" }}>
                 <View style={{ flex: 1 }}>
                     <Avatar.Image
@@ -58,6 +59,7 @@ export const Account = (props) => {
                     <Text style={{ fontSize: 20, marginVertical: 3 }}>{monthNames[new Date(currentUser.createdAt).getMonth()] + " " + new Date(currentUser.createdAt).getDate() + ", " + new Date(currentUser.createdAt).getFullYear()}</Text>
                 </View>
             </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }

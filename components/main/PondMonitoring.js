@@ -439,10 +439,6 @@ export const PondMonitoring = (props) => {
     }
 
     useEffect(() => {
-        // Dimensions.addEventListener('change', () => {
-        //     setChartWidth(Dimensions.get("window").width)
-        // });
-
         if (props.props === null) {
 
             registerForPushNotificationsAsync().then(token => setExpoPushToken(token));

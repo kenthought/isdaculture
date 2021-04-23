@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from "firebase";
 
-export const AddPond = ( {navigation} ) => {
+export const AddPond = (props) => {
     const [pondName, setPondName] = useState("")
     const [pondAddress, setPondAddress] = useState("")
     const [checked, setChecked] = useState('nursery');
@@ -134,45 +134,52 @@ export const AddPond = ( {navigation} ) => {
     }
     const addPond = (pondName, pondAddress, typeOfPond, pondLength, pondWidth, fishCapacity, expectedTimeline, pondDateStarted, setRequired, setRequiredError) => {
         const pondID = pondMakeID(15)
-            const db = firebase.database()
-            db.ref('ponds/' + firebase.auth().currentUser.uid + "/" + pondID).set({
-                pondID: pondID,
-                pondName: pondName,
-                pondAddress: pondAddress,
-                typeOfPond: typeOfPond,
-                pondLength: pondLength,
-                pondWidth: pondWidth,
-                fishCapacity: fishCapacity,
-                expectedTimeline: expectedTimeline,
-                pondDateStarted: pondDateStarted,
-                createdAt: firebase.database.ServerValue.TIMESTAMP
-            })
+        const db = firebase.database()
+        db.ref('ponds/' + firebase.auth().currentUser.uid + "/" + pondID).set({
+            pondID: pondID,
+            pondName: pondName,
+            pondAddress: pondAddress,
+            typeOfPond: typeOfPond,
+            pondLength: pondLength,
+            pondWidth: pondWidth,
+            fishCapacity: fishCapacity,
+            expectedTimeline: expectedTimeline,
+            pondDateStarted: pondDateStarted,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+        })
             .catch((error) => {
                 console.log(error)
             })
 
-        navigation.popToTop()
+        props.popToTop()
         console.log(pondName + " " + pondAddress + " " + typeOfPond + " " + pondLength + " " + pondWidth + " " + fishCapacity + " " + expectedTimeline + " " + pondDateStarted)
     }
 
     return (
         <SafeAreaView style={styles.container}>
-        <View style={{ justifyContent:"center", alignItems: "center", marginVertical: 10 }}>
-                <Text style={styles.screenTitle}>Add Ponds</Text>
-        </View>
+            <View style={{ flexDirection: "row", marginVertical: 10 }}>
+                <View style={{ flex: 1 }}>
+                    <Text onPress={() => props.navigation.toggleDrawer()}>
+                        <MaterialCommunityIcons name="menu" size={45} />
+                    </Text>
+                </View>
+                <View style={{ flex: 3 }}>
+                    <Text style={styles.screenTitle}>Add Pond</Text>
+                </View>
+            </View>
             <ScrollView>
                 <View style={{ padding: 20, backgroundColor: "white", borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
-                    <TextInput 
+                    <TextInput
                         label="Name of Pond"
                         style={styles.input}
-                        theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
-                        onChangeText={pondName => setPondName(pondName)} 
+                        theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
+                        onChangeText={pondName => setPondName(pondName)}
                         value={pondName} />
                     <TextInput
                         label="Address"
                         style={styles.input}
-                        theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
-                        onChangeText={pondAddress => setPondAddress(pondAddress)} 
+                        theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
+                        onChangeText={pondAddress => setPondAddress(pondAddress)}
                         value={pondAddress} />
                     <View>
                         <View style={{ marginVertical: 9 }}>
@@ -329,16 +336,16 @@ export const AddPond = ( {navigation} ) => {
                             <TextInput
                                 label="Pond Length"
                                 style={styles.input}
-                                theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
+                                theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
                                 keyboardType="number-pad"
                                 onChangeText={pondLength => setPondLength(pondLength)}
                                 value={pondLength} />
                         </View>
-                        <View style={{ flex: 1, width: "80%", marginLeft: 3}}>
+                        <View style={{ flex: 1, width: "80%", marginLeft: 3 }}>
                             <TextInput
                                 label="Pond Width"
                                 style={styles.input}
-                                theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
+                                theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
                                 keyboardType="number-pad"
                                 onChangeText={pondWidth => setPondWidth(pondWidth)}
                                 value={pondWidth} />
@@ -348,7 +355,7 @@ export const AddPond = ( {navigation} ) => {
                         <TextInput
                             label="Fish Capacity"
                             style={styles.input}
-                            theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
+                            theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
                             editable={false}
                             onChangeText={fishCapacity => setFishCapacity(fishCapacity)}
                             value={fishCapacity} />
@@ -357,7 +364,7 @@ export const AddPond = ( {navigation} ) => {
                         <TextInput
                             label="Date Started"
                             style={styles.input}
-                            theme={{ colors: { primary: 'skyblue',underlineColor:'transparent',}}}
+                            theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
                             editable={false}
                             value={pondDateStarted} />
                     </Pressable>
