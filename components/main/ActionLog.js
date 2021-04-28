@@ -8,7 +8,7 @@ export const ActionLog = () => {
             <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
                 <Text style={styles.screenTitle}>Action Log</Text>
             </View>
-        </SafeAreaView >
+        </SafeAreaView>
     )
 }
 
