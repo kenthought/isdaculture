@@ -7,14 +7,16 @@ export const PondDetails = ({ props, pondStatus }) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
 
-        const calcProdTimeline = () => {
+    const calcProdTimeline = () => {
         const currentDate = new Date()
         const expectedDate = new Date(props.pondDateStarted)
         expectedDate.setDate(expectedDate.getDate() + parseInt(props.expectedTimeline));
-        var leftover = Math.abs((currentDate.getTime() - expectedDate.getTime()) / 1000)
+        var leftover = (expectedDate.getTime() - currentDate.getTime()) / 1000
         var prodTimelineFormat = ""
+        console.log("leftover: " + leftover)
         if (leftover <= 0) {
             prodTimelineFormat = "Due time for harvest";
+            setProdTimeline(prodTimelineFormat)
         }
         else {
             if (leftover > 0) {
@@ -28,7 +30,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                     var minutes = Math.floor(leftover / 60);
                     leftover -= (minutes * 60);
                     leftover = leftover.toFixed(0)
-                    
+
                     if (mos > 0) {
                         if (mos == 1) {
                             prodTimelineFormat += mos + " mo";
@@ -166,9 +168,9 @@ export const PondDetails = ({ props, pondStatus }) => {
         return () => { };
     }, [prodTimeline])
 
-    if(props.props === null) {
+    if (props.props === null) {
         return (
-            <View style={{padding: 50}}>
+            <View style={{ padding: 50 }}>
                 <ActivityIndicator size="small" color="skyblue" />
             </View>
         )
