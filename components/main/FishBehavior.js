@@ -19,20 +19,19 @@ export const FishBehavior = () => {
                 <Text style={{ fontWeight: "bold", fontSize: 20 }} >Fish Behavior</Text>
               </View>
               <View style={{ marginVertical: 7 }}>
-                <Text style={{ fontWeight: "bold" }} >Normal </Text>
-                <Text>Temperature is greater than 34 but not more than 37</Text>
+                <MaterialCommunityIcons name="fish" color={"skyblue"} size={30} />
+                <Text style={{ fontWeight: "bold" }}>Stable</Text>
+                <Text>The crops show optimum growth rate, high metabolic process and normal swimming movements in the pond</Text>
               </View>
               <View style={{ marginVertical: 7 }}>
-                <Text style={{ fontWeight: "bold" }} >Behaved</Text>
-                <Text>Temperature is greater than 34 but not more than 37</Text>
+                <MaterialCommunityIcons name="fish" color={"orange"} size={30} />
+                <Text style={{ fontWeight: "bold" }}>Sluggish</Text>
+                <Text>The crops show sluggish growth rate, slow metabolic process and decreased activity in the pond</Text>
               </View>
               <View style={{ marginVertical: 7 }}>
-                <Text style={{ fontWeight: "bold" }} >Sluggish</Text>
-                <Text>Temperature is greater than 34 but not more than 37</Text>
-              </View>
-              <View style={{ marginVertical: 7 }}>
-                <Text style={{ fontWeight: "bold" }} >Stressed</Text>
-                <Text>Temperature is greater than 34 but not more than 37</Text>
+                <MaterialCommunityIcons name="fish" color={"crimson"} size={30} />
+                <Text style={{ fontWeight: "bold" }}>Stressed</Text>
+                <Text>The crops show changeable growth rate, high metabolic process, erratic swimming movements and loss of equilibrium</Text>
               </View>
             </View>
           </Modal>
