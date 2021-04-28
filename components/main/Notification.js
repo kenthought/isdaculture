@@ -1,6 +1,7 @@
-import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, TouchableOpacity, ActivityIndicator } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from "react-native-modal";
 import { connect } from "react-redux";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -34,6 +35,56 @@ const formatAMPM = (date) => {
 
 export const Notification = (props) => {
     const { currentUser, notification } = props;
+    const [isModalVisible, setIsModalVisible] = useState(false)
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible)
+    }
+
+    const ProdStatusModal = () => (
+        <View>
+            <Modal
+                isVisible={isModalVisible}
+                onSwipeComplete={() => toggleModal()}
+                onBackdropPress={() => toggleModal()}
+                swipeDirection="down">
+                <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
+                    <View style={{ marginVertical: 15, borderBottomWidth: 1, opacity: .3, marginHorizontal: 150 }} />
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 20 }} >Production Status</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Normal </Text>
+                        <Text>Temperature is in suitable condition.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Warning 1 (Hot) </Text>
+                        <Text>Temperature is between 36°C and 40°C.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Warning 1 (Cold) </Text>
+                        <Text>Temperature is between 20°C and 24°C.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Warning 2 (Hot) </Text>
+                        <Text>Temperature is between 40°C and 44°C.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Warning 2 (Cold) </Text>
+                        <Text>Temperature is between 16°C and 20°C.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Critical (Hot) </Text>
+                        <Text>Temperature is greater than 44°C.</Text>
+                    </View>
+                    <View style={{ marginVertical: 7 }}>
+                        <Text style={{ fontWeight: "bold" }} >Critical (Cold) </Text>
+                        <Text>Temperature is below 16°C.</Text>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
 
     if (notification === null) {
         return (
@@ -47,6 +98,12 @@ export const Notification = (props) => {
                     <View style={{ flex: 3 }}>
                         <Text style={styles.screenTitle}>Notification</Text>
                     </View>
+                    <View style={{ flex: 1.5, justifyContent: "center" }}>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <MaterialCommunityIcons name="information-outline" size={26} />
+                        </TouchableOpacity>
+                    </View>
+                    <ProdStatusModal />
                 </View>
                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                     <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
@@ -68,6 +125,12 @@ export const Notification = (props) => {
                     <View style={{ flex: 3 }}>
                         <Text style={styles.screenTitle}>Notification</Text>
                     </View>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                        <TouchableOpacity onPress={toggleModal}>
+                            <MaterialCommunityIcons name="information-outline" size={26} />
+                        </TouchableOpacity>
+                    </View>
+                    <ProdStatusModal />
                 </View>
                 <View style={styles.horizontal}>
                     <ActivityIndicator size="small" color="skyblue" />
@@ -93,9 +156,15 @@ export const Notification = (props) => {
                         <MaterialCommunityIcons name="menu" size={45} />
                     </Text>
                 </View>
-                <View style={{ flex: 3 }}>
+                <View style={{ flex: 2 }}>
                     <Text style={styles.screenTitle}>Notification</Text>
                 </View>
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                    <TouchableOpacity onPress={toggleModal}>
+                        <MaterialCommunityIcons name="information-outline" size={26} />
+                    </TouchableOpacity>
+                </View>
+                <ProdStatusModal />
             </View>
             <FlatList
                 data={Object.keys(notification).reverse()}

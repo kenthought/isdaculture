@@ -3,7 +3,6 @@ import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityInd
 import { LineChart } from "react-native-chart-kit"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import firebase from "firebase";
-import Modal from "react-native-modal";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
@@ -54,7 +53,6 @@ const formatAMPM = (date) => {
 export const History = (props) => {
   const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
   const [fluctuation, setFluctuation] = useState(null)
-  const [isModalVisible, setIsModalVisible] = useState(false)
 
   const fetchFluctuation = () => {
     const uid = firebase.auth().currentUser.uid
@@ -109,55 +107,6 @@ export const History = (props) => {
     </View>
   )
 
-  const ProdStatusModal = () => (
-    <View>
-      <Modal
-        isVisible={isModalVisible}
-        onSwipeComplete={() => toggleModal()}
-        onBackdropPress={() => toggleModal()}
-        swipeDirection="down">
-        <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
-          <View style={{ marginVertical: 15, borderBottomWidth: 1, opacity: .3, marginHorizontal: 150 }} />
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 20 }} >Production Status</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Normal </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Warning 1 (Hot) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Warning 1 (Cold) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Warning 2 (Hot) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Warning 2 (Cold) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Critical (Hot) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-          <View style={{ marginVertical: 7 }}>
-            <Text style={{ fontWeight: "bold" }} >Critical (Cold) </Text>
-            <Text>Temperature is greater than 34 but not more than 37</Text>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  )
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible)
-  }
-
   useEffect(() => {
     Dimensions.addEventListener('change', () => {
       setChartWidth(Dimensions.get("window").width)
@@ -209,16 +158,8 @@ export const History = (props) => {
         <View style={{ padding: 3 }}>
         <PondHistoryTempChart />
         </View>
-        <View style={{ flexDirection: "row", marginVertical: 10 }}>
-          <View style={{ flex: 1 }}>
+        <View style={{ marginVertical: 10 }}>
             <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
-          </View>
-          <View style={{ flex: 1, justifyContent: "center" }}>
-            <TouchableOpacity onPress={toggleModal}>
-              <MaterialCommunityIcons name="information-outline" size={20} />
-            </TouchableOpacity>
-          </View>
-          <ProdStatusModal />
         </View>
       <View style={{ padding: 5, marginVertical: 8, flexDirection: "column", backgroundColor: "skyblue" }}>
         <View style={{ flexDirection: "row" }}>
