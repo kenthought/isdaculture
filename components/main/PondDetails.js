@@ -9,11 +9,10 @@ export const PondDetails = ({ props, pondStatus }) => {
 
     const calcProdTimeline = () => {
         const currentDate = new Date()
-        const expectedDate = new Date(props.pondDateStarted)
-        expectedDate.setDate(expectedDate.getDate() + parseInt(props.expectedTimeline));
+        const expectedDate = new Date(props.expectedDate)
         var leftover = (expectedDate.getTime() - currentDate.getTime()) / 1000
         var prodTimelineFormat = ""
-        console.log("leftover: " + leftover)
+        
         if (leftover <= 0) {
             prodTimelineFormat = "Due time for harvest";
             setProdTimeline(prodTimelineFormat)
@@ -156,10 +155,22 @@ export const PondDetails = ({ props, pondStatus }) => {
         }
     }
 
-    const pondHarvestDate = (pondDateStarted, expectedTimeline) => {
-        const expectedDate = new Date(pondDateStarted)
-        expectedDate.setDate(expectedDate.getDate() + parseInt(expectedTimeline));
-        return monthNames[expectedDate.getMonth()] + " " + expectedDate.getDate() + ", " + expectedDate.getFullYear();
+    const pondHarvestTimeAndDate = (expectedDate) => {
+        const date = new Date(expectedDate)
+        return monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + "\n" + formatAMPM(date);
+    }
+
+    const formatAMPM = (date) => {
+        var formatTime = new Date(date)
+        var hours = formatTime.getHours();
+        var minutes = formatTime.getMinutes();
+        var seconds = formatTime.getSeconds();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ':' + seconds + " " + ampm;
+        return strTime;
     }
 
     useEffect(() => {
@@ -190,7 +201,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                 <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Timeline: </Text>
                     <Text>{prodTimeline}</Text>
-                    <Text>{pondHarvestDate(props.pondDateStarted, props.expectedTimeline)}</Text>
+                    <Text>{pondHarvestTimeAndDate(props.expectedDate)}</Text>
                 </View>
             </View>
         </View>
