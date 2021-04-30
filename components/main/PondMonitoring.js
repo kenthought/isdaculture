@@ -427,6 +427,8 @@ export const PondMonitoring = (props) => {
     }
 
     const insertFluctuation = (fluctuationDate, temperatureStatus, pondProductionStatus, duration) => {
+        const expectedDate = new Date(props.props.expectedDate)
+        expectedDate.setSeconds(expectedDate.getSeconds() + parseInt(duration)) //adding the fluctuation duration
         const db = firebase.database()
         db.ref('fluctuation/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
             pondID: props.props.pondID,
@@ -435,6 +437,10 @@ export const PondMonitoring = (props) => {
             pondProductionStatus,
             fluctuationDate,
             duration
+        })
+
+        db.ref('ponds/' + firebase.auth.currentUser.uid + "/" + props.props.pondID).set({
+           expectedDate: expectedDate.toString()
         })
     }
 
