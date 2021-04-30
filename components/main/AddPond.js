@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { SafeAreaView, View, StyleSheet, StatusBar, Text, Button, Pressable, ScrollView } from "react-native";
-import { RadioButton, TextInput } from "react-native-paper";
+import { RadioButton, TextInput, Snackbar } from "react-native-paper";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firebase from "firebase";
@@ -17,13 +17,16 @@ export const AddPond = (props) => {
     const [fishCapacity, setFishCapacity] = useState("")
     const [date, setDate] = useState(new Date())
     const [pondDateStarted, setPondDateStarted] = useState("")
-    const [expectedTimeline, setExpectedTimeline] = useState(false);
+    const [expectedTimeline, setExpectedTimeline] = useState("");
     const [shouldShow, setShouldShow] = useState(false);
     const [shouldShow2, setShouldShow2] = useState(false);
     const [show, setShow] = useState(false);
     const [mode, setMode] = useState('date');
     const [required, setRequired] = useState(false);
     const [requiredError, setRequiredError] = useState("");
+    const [visible, setVisible] = React.useState(false);
+    const onToggleSnackBar = () => setVisible(!visible);
+    const onDismissSnackBar = () => setVisible(false);
 
     useEffect(() => {
         pondFishCapacity()
@@ -35,7 +38,6 @@ export const AddPond = (props) => {
         setDate(currentDate)
         const formattedDate = (currentDate.getMonth() + 1) + "/" + currentDate.getDate() + "/" + currentDate.getFullYear()
         setPondDateStarted(formattedDate);
-        console.log(formattedDate)
     };
 
     const showMode = (currentMode) => {
@@ -132,7 +134,10 @@ export const AddPond = (props) => {
         }
         return result;
     }
+
     const addPond = (pondName, pondAddress, typeOfPond, pondLength, pondWidth, fishCapacity, expectedTimeline, pondDateStarted, setRequired, setRequiredError) => {
+        const expectedDate = new Date(pondDateStarted)
+        expectedDate.setDate(expectedDate.getDate() + parseInt(expectedTimeline));
         const pondID = pondMakeID(15)
         const db = firebase.database()
         db.ref('ponds/' + firebase.auth().currentUser.uid + "/" + pondID).set({
@@ -143,6 +148,7 @@ export const AddPond = (props) => {
             pondLength: pondLength,
             pondWidth: pondWidth,
             fishCapacity: fishCapacity,
+            expectedDate: expectedDate.toString(),
             expectedTimeline: expectedTimeline,
             pondDateStarted: pondDateStarted,
             createdAt: firebase.database.ServerValue.TIMESTAMP
@@ -151,8 +157,26 @@ export const AddPond = (props) => {
                 console.log(error)
             })
 
-        props.popToTop()
-        console.log(pondName + " " + pondAddress + " " + typeOfPond + " " + pondLength + " " + pondWidth + " " + fishCapacity + " " + expectedTimeline + " " + pondDateStarted)
+        onToggleSnackBar()
+        resetInput()
+    }
+
+    const resetInput = () => {
+        setPondName("")
+        setPondAddress("")
+        setChecked("")
+        setChecked2("")
+        setChecked3("")
+        setTypeOfPond("")
+        setPondLength("")
+        setPondWidth("")
+        setFishCapacity("")
+        setPondDateStarted("")
+        setExpectedTimeline("")
+        setShouldShow(false)
+        setShouldShow2(false)
+        setRequired(false)
+        setRequiredError("")
     }
 
     return (
@@ -414,6 +438,15 @@ export const AddPond = (props) => {
                     </View>
                 </View>
             </ScrollView>
+            <View>
+                <Snackbar
+                    visible={visible}
+                    duration={3000}
+                    onDismiss={onDismissSnackBar}
+                >
+                    Pond successfully added!
+      </Snackbar>
+            </View>
         </SafeAreaView>
     )
 }
