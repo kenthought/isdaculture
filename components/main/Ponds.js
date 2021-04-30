@@ -10,7 +10,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 const color = ["white", "#03709c"]
 const textColor = ["#000000", "#ffff"]
 
-const Item = ({ index, pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedTimeline, props }) => (
+const Item = ({ index, pondID, pondName, pondAddress, fishCapacity, pondDateStarted, expectedDate, props }) => (
     <TouchableOpacity
         style={{ marginVertical: 3, backgroundColor: color[index % color.length], paddingVertical: 15, paddingHorizontal: 30, borderRadius: 30, }}
         onPress={() => props.navigation.navigate("Dashboard", { pondID: pondID })}>
@@ -52,23 +52,22 @@ const Item = ({ index, pondID, pondName, pondAddress, fishCapacity, pondDateStar
                     <Text style={{ color: textColor[index % textColor.length] }}>Progress: </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                    <Text style={{ color: textColor[index % textColor.length] }}>{(((pondProgress(pondDateStarted, parseInt(expectedTimeline)))) < 0 ? "0%" : (pondProgress(pondDateStarted, parseInt(expectedTimeline))) >= 100 ? "100%" : Math.round((pondProgress(pondDateStarted, parseInt(expectedTimeline)))).toString() + "%")}</Text>
+                    <Text style={{ color: textColor[index % textColor.length] }}>{(((pondProgress(pondDateStarted, expectedDate))) < 0 ? "0%" : (pondProgress(pondDateStarted, expectedDate)) >= 100 ? "100%" : Math.round((pondProgress(pondDateStarted, expectedDate))).toString() + "%")}</Text>
                 </View>
             </View>
             <View style={{ marginVertical: 8 }}>
-                <ProgressBar progress={((pondProgress(pondDateStarted, parseInt(expectedTimeline))) / 100)} color={color[index % color.length === 0 ? 1 : 0]} />
+                <ProgressBar progress={((pondProgress(pondDateStarted, expectedDate)) / 100)} color={color[index % color.length === 0 ? 1 : 0]} />
             </View>
         </View>
     </TouchableOpacity>
 );
 
-const pondProgress = (pondDateStarted, expectedTimeline) => {
+const pondProgress = (pondDateStarted, expectedDate) => {
     const dateStarted = new Date(pondDateStarted)
     dateStarted.setDate(dateStarted.getDate() + 1)
-    const expectedDate = new Date(dateStarted);
+    const dateExpected = new Date(expectedDate);
     const currentDate = new Date()
-    expectedDate.setDate(expectedDate.getDate() + expectedTimeline);
-    return ((currentDate - dateStarted) / (expectedDate - dateStarted)) * 100;
+    return ((currentDate - dateStarted) / (dateExpected - dateStarted)) * 100;
 }
 
 // const AddPondButton = ({ props }) => (
@@ -131,7 +130,7 @@ export const Ponds = (props) => {
             pondAddress={ponds[item].pondAddress}
             fishCapacity={ponds[item].fishCapacity}
             pondDateStarted={ponds[item].pondDateStarted}
-            expectedTimeline={ponds[item].expectedTimeline}
+            expectedDate={ponds[item].expectedDate}
             props={props}
         />
     );
