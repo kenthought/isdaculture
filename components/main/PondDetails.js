@@ -200,7 +200,7 @@ export const PondDetails = ({ props, pondStatus }) => {
                 </View>
                 <View style={{ flex: 1, width: "90%" }}>
                     <Text style={{ fontWeight: "bold" }}>Production Timeline: </Text>
-                    <Text>{prodTimeline}</Text>
+                    <Text lineBreakMode="tail" numberOfLines={1} >{prodTimeline}</Text>
                     <Text>{pondHarvestTimeAndDate(props.expectedDate)}</Text>
                 </View>
             </View>

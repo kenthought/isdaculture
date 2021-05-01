@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, Dimensions, ActivityIndicator } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import firebase from "firebase";
 import PondDetails from "./PondDetails";
 import { RealtimeTemp, RealtimeDO } from "./PondRealtimeData"
@@ -31,7 +31,7 @@ export const PondMonitoring = (props) => {
     // const [chartWidth, setChartWidth] = useState()
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
-    const [fluctuationDate, setFluctuationDate] = useState("")
+    const [fluctuationDate, setFluctuationDate] = useState(new Date())
 
     const fetchRealtimeData = () => {
         firebase.database()
@@ -213,7 +213,9 @@ export const PondMonitoring = (props) => {
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
             {
                 //start timer for fluctuation recording
+                console.log("0 fluctuation date: " + fluctuationDate)
                 setFluctuationDate(new Date())
+                console.log("0.5 fluctuation date: " + fluctuationDate)
 
                 if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
                 {
@@ -221,15 +223,18 @@ export const PondMonitoring = (props) => {
                     // production_id = 3;
                     tempAndProdStatus.push("BAD")
                     tempAndProdStatus.push("Warning 1 (Cold)")
+                    setTempAndProdStatus(tempAndProdStatus)
                 }
                 else if (pondTemp >= 36 && pondTemp < 40) //WARNING 1 (Hot)
                 {
                     // condition_id = 3;
                     // production_id = 2;
+                    console.log("1 fluctuation date: " + fluctuationDate)
                     tempAndProdStatus.push("BAD")
                     tempAndProdStatus.push("Warning 1 (Hot)")
+                    setTempAndProdStatus(tempAndProdStatus)
+                    console.log(tempAndProdStatus)
                 }
-                setTempAndProdStatus(tempAndProdStatus)
             }
         }
         else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40))    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
@@ -268,10 +273,10 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                console.log("3 fluctuation date: " + fluctuationDate)
                 console.log("1st " + tempArr + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                console.log("Temp and Prod: ", tempAndProdStatus[0], tempAndProdStatus[1])
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
-                setTempAndProdStatus([])
-                setFluctuationDate("")
             }
         }
         else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -305,8 +310,6 @@ export const PondMonitoring = (props) => {
                 sendPushNotification(expoPushToken, title, body)
                 console.log("2nd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
-                setTempAndProdStatus([])
-                setFluctuationDate("")
             }
         }
         else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -340,8 +343,6 @@ export const PondMonitoring = (props) => {
                 sendPushNotification(expoPushToken, title, body)
                 console.log("3rd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
-                setTempAndProdStatus([])
-                setFluctuationDate("")
             }
         }
         else if (prevPondTemp < 16 && prevPondTemp != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -375,8 +376,6 @@ export const PondMonitoring = (props) => {
                 sendPushNotification(expoPushToken, title, body)
                 console.log("4th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
-                setTempAndProdStatus([])
-                setFluctuationDate("")
             }
         }
         else if (prevPondTemp >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
@@ -410,8 +409,6 @@ export const PondMonitoring = (props) => {
                 sendPushNotification(expoPushToken, title, body)
                 console.log("5th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
-                setTempAndProdStatus([])
-                setFluctuationDate("")
             }
         }
     }
@@ -427,6 +424,8 @@ export const PondMonitoring = (props) => {
     }
 
     const insertFluctuation = (fluctuationDate, temperatureStatus, pondProductionStatus, duration) => {
+        console.log("4 fluctuation date: " + fluctuationDate)
+        console.log(temperatureStatus, pondProductionStatus, duration)
         const expectedDate = new Date(props.props.expectedDate)
         expectedDate.setSeconds(expectedDate.getSeconds() + parseInt(duration)) //adding the fluctuation duration
         const db = firebase.database()
@@ -437,11 +436,27 @@ export const PondMonitoring = (props) => {
             pondProductionStatus,
             fluctuationDate,
             duration
-        })
+        }) 
 
-        db.ref('ponds/' + firebase.auth.currentUser.uid + "/" + props.props.pondID).set({
-           expectedDate: expectedDate.toString()
-        })
+        var newExpectedDate = {
+            createdAt: props.props.createdAt,
+            expectedDate: expectedDate.toString(),
+            expectedTimeline: props.props.expectedTimeline,
+            fishCapacity: props.props.fishCapacity,
+            pondAddress: props.props.pondAddress,
+            pondDateStarted: props.props.pondDateStarted,
+            pondID: props.props.pondID,
+            pondLength: props.props.pondLength,
+            pondName: props.props.pondName,
+            pondWidth: props.props.pondWidth,
+            typeOfPond: props.props.typeOfPond,
+          };
+
+        var updates = {};
+        updates['ponds/' + firebase.auth().currentUser.uid + "/" + props.props.pondID] = newExpectedDate;
+
+        firebase.database().ref().update(updates);
+        setTempAndProdStatus([])
     }
 
     useEffect(() => {
@@ -470,7 +485,7 @@ export const PondMonitoring = (props) => {
             Notifications.removeNotificationSubscription(responseListener.current);
             firebase.database().ref('pondRealtimeData').off()
         };
-    }, [props, pondTempTime])
+    }, [props, tempAndProdStatus, pondTempTime])
 
     if (props.props === null) {
         return (

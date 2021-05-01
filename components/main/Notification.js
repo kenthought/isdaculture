@@ -156,7 +156,7 @@ export const Notification = (props) => {
                         <MaterialCommunityIcons name="menu" size={45} />
                     </Text>
                 </View>
-                <View style={{ flex: 2 }}>
+                <View style={{ flex: 3 }}>
                     <Text style={styles.screenTitle}>Notification</Text>
                 </View>
                 <View style={{ flex: 1, justifyContent: "center" }}>

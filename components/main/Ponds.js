@@ -80,7 +80,7 @@ const pondProgress = (pondDateStarted, expectedDate) => {
 
 export const Ponds = (props) => {
     const { currentUser, ponds } = props;
-
+    
     if (ponds === null) {
         return (
             <SafeAreaView style={styles.container}>
@@ -148,7 +148,7 @@ export const Ponds = (props) => {
                 </View>
             </View>
             <FlatList
-                data={Object.keys(ponds).reverse()}
+                data={Object.keys(ponds)}
                 renderItem={renderItem}
             />
         </SafeAreaView>

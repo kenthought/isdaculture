@@ -39,7 +39,7 @@ export const fetchNotification = () => {
             .orderByChild("date")
             .on("value", (snapshot) => {
                 dispatch({ type: USER_NOTIFICATION_STATE_CHANGE, notification: snapshot.val() })
-                console.log(snapshot.val())
+                // console.log(snapshot.val())
             }, (errorObject) => {
                 console.log(errorObject.code + " : " + errorObject.message)
             })

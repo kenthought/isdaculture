@@ -115,10 +115,10 @@ export const History = (props) => {
     if (fluctuation === null) {
       fetchFluctuation()
     }
-    console.log(fluctuation)
+    
     return () => { }
   }, [fluctuation])
-  // console.log(fluctuation))
+  
   if (fluctuation !== null && fluctuation.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
@@ -132,6 +132,9 @@ export const History = (props) => {
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
+      <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
+        <Text style={styles.screenTitle}>History</Text>
+      </View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
           <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>

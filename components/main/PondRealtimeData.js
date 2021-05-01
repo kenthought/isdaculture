@@ -25,7 +25,7 @@ export const RealtimeDO = ({ pondDO, pondDOStatus }) => {
     if (pondDO.toString() === "") {
         return (
             <View style={{ alignItems: "center", padding: 5 }}>
-                <Text style={{ fontWeight: "bold" }}>Pond Temperature</Text>
+                <Text style={{ fontWeight: "bold" }}>Pond Dissolved Oxygen</Text>
                 <ActivityIndicator size="small" color="skyblue" style={{ marginVertical: 10 }} />
             </View>
         )

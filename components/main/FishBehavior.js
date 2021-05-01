@@ -45,10 +45,10 @@ export const FishBehavior = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ flexDirection: "row", marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 2 }}>
                     <Text style={styles.screenTitle}>Fish Behavior</Text>
                 </View>
-                <View style={{ flex: .80, justifyContent: "center" }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
                     <TouchableOpacity onPress={toggleModal}>
                         <MaterialCommunityIcons name="information-outline" size={26} />
                     </TouchableOpacity>
