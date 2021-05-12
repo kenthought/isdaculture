@@ -207,7 +207,7 @@ export const AddPond = (props) => {
                         value={pondAddress} />
                     <View>
                         <View style={{ marginVertical: 9 }}>
-                            <Text>Type of Pond: </Text>
+                            <Text>Pond Compartment: </Text>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <View style={{ flex: 1, alignItems: "center" }}>
@@ -251,9 +251,11 @@ export const AddPond = (props) => {
                             </View>
                         </View>
                         {shouldShow && (
-                            <View style={{ marginVertical: 20 }}>
-                                <Text style={{ textAlign: "center" }}>Rearing Pond</Text>
-                                <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }} >
+                            <View style={{ marginTop: 9 }}>
+                            <View style={{ marginVertical: 9 }}>
+                                <Text>Rearing Options: </Text>
+                            </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }} >
                                     <View style={{ flex: 1, alignItems: "center" }}>
                                         <Text>Common Option</Text>
                                         <RadioButton
@@ -279,8 +281,10 @@ export const AddPond = (props) => {
                                     </View>
                                 </View>
                                 {shouldShow2 && (
-                                    <View style={{ marginVertical: 20 }}>
-                                        <Text style={{ textAlign: "center" }}>Common Option</Text>
+                                    <View style={{ marginTop: 9 }}>
+                                        <View style={{ marginVertical: 9 }}>
+                                            <Text>Pond Stocking Density: </Text>
+                                        </View>
                                         <View style={{ flexDirection: "column" }}>
                                             <View style={{ flexDirection: "row", marginTop: 20, alignItems: "center" }} >
                                                 <View style={{ flex: 1, alignItems: "center" }}>
@@ -382,7 +386,7 @@ export const AddPond = (props) => {
                             theme={{ colors: { primary: 'skyblue', underlineColor: 'transparent', } }}
                             editable={false}
                             onChangeText={fishCapacity => setFishCapacity(fishCapacity)}
-                            value={fishCapacity} />
+                            value={fishCapacity == 0 || fishCapacity === "" ? "" : fishCapacity + (checked === "nursery" ? " fry" : checked === "transitional" ? " fingerlings" : checked === "rearing" ? " fishes" : "")}  />
                     </View>
                     <Pressable onPress={showDatepicker}>
                         <TextInput
@@ -426,6 +430,17 @@ export const AddPond = (props) => {
 
                                 if (pondDateStarted === "")
                                     requiredError += "\nDate Started is required"
+
+                                if (fishCapacity === "" || fishCapacity == 0) {
+                                    if(checked2 === "") {
+                                        requiredError += "\nPlease choose from the rearing option"
+                                    } else {
+                                        if(checked3 === "") {
+                                           requiredError += "\nPlease choose from the pond stocking density"
+
+                                        }
+                                    }
+                                }
 
                                 if (requiredError === "") {
                                     addPond(pondName, pondAddress, typeOfPond, pondLength, pondWidth, fishCapacity, expectedTimeline, date.toString(), setRequired, setRequiredError)
