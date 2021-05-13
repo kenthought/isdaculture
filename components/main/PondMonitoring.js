@@ -32,6 +32,8 @@ export const PondMonitoring = (props) => {
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
     const [fluctuationDate, setFluctuationDate] = useState(new Date())
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
 
     if (props.props === null) {
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -163,7 +165,7 @@ export const PondMonitoring = (props) => {
     const sendPondNotificationAndFluctuationRecording = () => {
         // console.log(prevPondTemp, pondTemp, fluctuationDate)
         var tempArr = []
-        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
+        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded pondTemp is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
             if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
             {
@@ -475,17 +477,49 @@ export const PondMonitoring = (props) => {
         setFluctuationDate("")
     }
 
-    const insertActionLog = (pondTemp, tempStatus, prodStatus, action, timeAndDate) =>{
-        console.log("Action Log: ", pondTemp, tempStatus, prodStatus, action, timeAndDate)
+    const actionLogAndFishBehavior = () => {
+        if (pondTemp >= 24 && pondTemp < 36) {
+            if (pondTemp >= 26 && pondTemp < 34)   //current temperature is within the BETTER-BEST temperature range
+            {
+                // arr = [6];
+                // temp = 1;
+                // temp_condition = 1;
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp < 26) //current temperature is below BETTER-BEST temperature range
+            {
+                // arr = [1, 3];
+                // temp = 1;
+                // temp_condition = 2;
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water and Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else     //current temperature is above BETTER-BEST temperature range
+            {
+                // arr = [2, 3];
+                // temp = 1;
+                // temp_condition = 2;
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water and Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        } else {
+
+        }
     }
 
-    const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) =>{
+    const insertActionLog = (pondTemp, pondTempStatus, prodStatus, action, timeAndDate) => {
+        console.log("Action Log: ", pondTemp, pondTempStatus, prodStatus, action, timeAndDate)
+    }
+
+    const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) => {
         console.log("Fish Behavior: ", pondTemp, pondDo, behavior, timeAndDate)
     }
 
     useEffect(() => {
         fetchRealtimeData()
         sendPondNotificationAndFluctuationRecording()
+        actionLogAndFishBehavior()
 
         console.log(prevPondTemp, pondTemp)
         return () => {
