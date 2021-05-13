@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from "react";
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import firebase from "firebase";
 import PondDetails from "./PondDetails";
 import { RealtimeTemp, RealtimeDO } from "./PondRealtimeData"
@@ -16,8 +16,8 @@ Notifications.setNotificationHandler({
 });
 
 export const PondMonitoring = (props) => {
-    const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState(false);
+    const [expoPushToken, setExpoPushToken] = useState('')
+    const [notification, setNotification] = useState(false)
     const notificationListener = useRef();
     const responseListener = useRef();
     const [pondTempTime, setPondTempTime] = useState("")
@@ -32,6 +32,20 @@ export const PondMonitoring = (props) => {
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
     const [fluctuationDate, setFluctuationDate] = useState(new Date())
+
+    if (props.props === null) {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
+
+        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
+    }
 
     const fetchRealtimeData = () => {
         firebase.database()
@@ -57,9 +71,10 @@ export const PondMonitoring = (props) => {
                 setPondDO(fetchDOData)
                 setPondTemp(chartData[chartData.length - 1])
                 setPrevPondTemp(chartData[chartData.length - 2])
-
                 setPondTempTime(chartLabel[chartData.length - 1])
-                // console.log(prevPondTemp, pondTemp)
+
+                tempStatus()
+                doStatus()
             }, (errorObject) => {
                 console.log(errorObject.code + " : " + errorObject.message)
             })
@@ -436,7 +451,7 @@ export const PondMonitoring = (props) => {
             pondProductionStatus,
             fluctuationDate,
             duration
-        }) 
+        })
 
         var newExpectedDate = {
             createdAt: props.props.createdAt,
@@ -450,42 +465,27 @@ export const PondMonitoring = (props) => {
             pondName: props.props.pondName,
             pondWidth: props.props.pondWidth,
             typeOfPond: props.props.typeOfPond,
-          };
+        };
 
         var updates = {};
         updates['ponds/' + firebase.auth().currentUser.uid + "/" + props.props.pondID] = newExpectedDate;
 
         firebase.database().ref().update(updates);
         setTempAndProdStatus([])
+        setFluctuationDate("")
     }
 
     useEffect(() => {
-        if (props.props === null) {
+        fetchRealtimeData()
+        sendPondNotificationAndFluctuationRecording()
 
-            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-            // This listener is fired whenever a notification is received while the app is foregrounded
-            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                setNotification(notification);
-            });
-
-            // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-                console.log(response);
-            });
-        } else {
-            fetchRealtimeData()
-            tempStatus()
-            doStatus()
-            sendPondNotificationAndFluctuationRecording()
-        }
-
+        console.log(prevPondTemp, pondTemp)
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);
             Notifications.removeNotificationSubscription(responseListener.current);
             firebase.database().ref('pondRealtimeData').off()
         };
-    }, [props, tempAndProdStatus, pondTempTime])
+    }, [pondTempTime])
 
     if (props.props === null) {
         return (
