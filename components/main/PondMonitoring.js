@@ -475,6 +475,14 @@ export const PondMonitoring = (props) => {
         setFluctuationDate("")
     }
 
+    const insertActionLog = (pondTemp, tempStatus, prodStatus, action, timeAndDate) =>{
+        console.log("Action Log: ", pondTemp, tempStatus, prodStatus, action, timeAndDate)
+    }
+
+    const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) =>{
+        console.log("Fish Behavior: ", pondTemp, pondDo, behavior, timeAndDate)
+    }
+
     useEffect(() => {
         fetchRealtimeData()
         sendPondNotificationAndFluctuationRecording()
