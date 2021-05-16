@@ -574,7 +574,7 @@ export const PondMonitoring = (props) => {
         actionLogAndFishBehavior()
 
         if (initial === true) {
-            if (pondTemp != "" || pondDO != "" || pondStatus != "" || pondTempStatus != "") {
+            if (pondTemp != "" && pondDO != "" && pondStatus != "" && pondTempStatus != "") {
                 initialFunction()
                 setInitial(false)
             }
