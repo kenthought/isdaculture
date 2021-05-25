@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import firebase from "firebase";
 import PondDetails from "./PondDetails";
-import { RealtimeTemp, RealtimeDO } from "./PondRealtimeData"
+import { RealtimeData } from "./PondRealtimeData"
 import { PondRealtimeChart } from "./PondRealtimeChart"
 
 Notifications.setNotificationHandler({
@@ -26,7 +26,6 @@ export const PondMonitoring = (props) => {
     const [pondDO, setPondDO] = useState("")
     const [pondStatus, setPondStatus] = useState("")
     const [pondTempStatus, setPondTempStatus] = useState("")
-    const [pondDOStatus, setPondDOStatus] = useState("")
     const [tempAndProdStatus, setTempAndProdStatus] = useState([])
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
@@ -75,8 +74,6 @@ export const PondMonitoring = (props) => {
                 setPrevPondTemp(chartData[chartData.length - 2])
                 setPondTempTime(chartLabel[chartData.length - 1])
 
-                tempStatus()
-                doStatus()
             }, (errorObject) => {
                 console.log(errorObject.code + " : " + errorObject.message)
             })
@@ -109,8 +106,10 @@ export const PondMonitoring = (props) => {
         else if ((pondTemp >= 16 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 44))    //WARNING LEVEL
         {
             if (pondTemp >= 16 && pondTemp < 24) {
+                setPondTempStatus("GOOD");
             }
             else if (pondTemp >= 36 && pondTemp < 44) {
+                setPondTempStatus("GOOD");
             }
 
             if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40)) {
@@ -124,10 +123,8 @@ export const PondMonitoring = (props) => {
         }
         else    // CRITICAL LEVEL
         {
-            if (pondTemp === -127.00) {
-                setPondStatus("Critical");
-            }
-            if (pondTemp < 16 & pondTemp != -127.00) {
+            if (pondTemp < 16 && pondTemp != "") {
+                console.log(pondTemp)
                 setPondStatus("Critical");
                 setPondTempStatus("WORST");
             }
@@ -164,7 +161,6 @@ export const PondMonitoring = (props) => {
 
     const sendPondNotificationAndFluctuationRecording = () => {
         // console.log(prevPondTemp, pondTemp, fluctuationDate)
-        var tempArr = []
         if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded pondTemp is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
             if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
@@ -230,9 +226,9 @@ export const PondMonitoring = (props) => {
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
             {
                 //start timer for fluctuation recording
-                console.log("0 fluctuation date: " + fluctuationDate)
+                console.log("fluctuation date var: " + fluctuationDate)
                 setFluctuationDate(new Date())
-                console.log("0.5 fluctuation date: " + fluctuationDate)
+                console.log("fluctuation date: " + fluctuationDate)
 
                 if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
                 {
@@ -291,7 +287,7 @@ export const PondMonitoring = (props) => {
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
                 console.log("3 fluctuation date: " + fluctuationDate)
-                console.log("1st " + tempArr + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                console.log("1st" + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 console.log("Temp and Prod: ", tempAndProdStatus[0], tempAndProdStatus[1])
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
@@ -562,19 +558,36 @@ export const PondMonitoring = (props) => {
 
     const insertActionLog = (pondTemp, pondTempStatus, prodStatus, action, timeAndDate) => {
         console.log("Action Log: ", pondTemp, pondTempStatus, prodStatus, action, timeAndDate)
+        const db = firebase.database()
+        db.ref('actionLog/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
+            pondTemp,
+            pondTempStatus,
+            prodStatus,
+            action,
+            timeAndDate
+        })
     }
 
     const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) => {
         console.log("Fish Behavior: ", pondTemp, pondDo, behavior, timeAndDate)
+        const db = firebase.database()
+        db.ref('fishBehavior/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
+            pondTemp,
+            pondDo,
+            behavior,
+            timeAndDate
+        })
     }
 
     useEffect(() => {
         fetchRealtimeData()
+        tempStatus()
         sendPondNotificationAndFluctuationRecording()
         actionLogAndFishBehavior()
 
         if (initial === true) {
             if (pondTemp != "" && pondDO != "" && pondStatus != "" && pondTempStatus != "") {
+                console.log(pondTemp, pondStatus, pondTempStatus)
                 initialFunction()
                 setInitial(false)
             }
@@ -602,13 +615,8 @@ export const PondMonitoring = (props) => {
                     <PondDetails props={props.props} pondStatus={pondStatus} />
                 </View>
                 <View style={{ flexDirection: "column", marginTop: 10, padding: 10, backgroundColor: "white" }}>
-                    <View style={{ flex: 1, flexDirection: "row" }}>
-                        <View style={{ flex: 1 }}>
-                            <RealtimeTemp pondTemp={pondTemp} pondTempStatus={pondTempStatus} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <RealtimeDO pondDO={pondDO} pondDOStatus={pondDOStatus} />
-                        </View>
+                    <View style={{ flex: 1 }}>
+                        <RealtimeData pondTemp={pondTemp} pondTempStatus={pondTempStatus} pondDO={pondDO} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <PondRealtimeChart pondDetails={props.props} chartData={chartData} chartLabel={chartLabel} />
