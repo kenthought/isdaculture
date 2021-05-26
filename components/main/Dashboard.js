@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator } from "react-native";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { PondMonitoring } from "./PondMonitoring";
-import FishBehaviorScreen from "./FishBehavior";
+import { FishBehavior } from "./FishBehavior";
 import { History } from "./History";
-import ActionLogScreen from "./ActionLog";
+import { ActionLog } from "./ActionLog";
 import { TabBar } from "./TabBar"
 import firebase from "firebase"
 
@@ -42,9 +42,9 @@ export function Dashboard({ route }) {
   return (
     <Tab.Navigator initialRouteName="Pond Monitoring" tabBar={props => <TabBar {...props} />}>
       <Tab.Screen name="Pond Monitoring" children={() => <PondMonitoring props={pondDetails} />} />
-      <Tab.Screen name="Fish Behavior" component={FishBehaviorScreen} />
+      <Tab.Screen name="Fish Behavior" children={() => <FishBehavior props={pondDetails} />}  />
       <Tab.Screen name="History" children={() => <History props={pondDetails} />} />
-      <Tab.Screen name="Action Log" component={ActionLogScreen} />
+      <Tab.Screen name="Action Log" children={() => <ActionLog props={pondDetails} />} />
     </Tab.Navigator> 
   );
 }
