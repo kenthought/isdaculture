@@ -1,29 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, Dimensions, ActivityIndicator, ScrollView } from "react-native";
+import Modal from "react-native-modal"
+import { DataTable } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import firebase from "firebase";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"]
-
-const Item = ({ fluctuationDate, pondProductionStatus, temperatureStatus, duration }) => (
-  <View style={{ marginVertical: 8, flexDirection: "row" }}>
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ textAlign: "center" }}>{monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}</Text>
-      <Text style={{ textAlign: "center" }}>{formatAMPM(fluctuationDate)}</Text>
-    </View>
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ textAlign: "center" }}>{pondProductionStatus}</Text>
-    </View>
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ textAlign: "center" }}>{temperatureStatus}</Text>
-    </View>
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ textAlign: "center" }}>{secondsToHms(duration)}</Text>
-    </View>
-  </View>
-)
 
 function secondsToHms(d) {
   d = Number(d);
@@ -53,6 +38,59 @@ const formatAMPM = (date) => {
 export const History = (props) => {
   const [chartWidth, setChartWidth] = useState(Dimensions.get("window").width)
   const [fluctuation, setFluctuation] = useState(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [fluctuationDetails, setFluctuationDetails] = useState([])
+  const [page, setPage] = useState(0);
+  const from = page * 8;
+  const to = (page + 1) * 8;
+
+  const toggleHideModal = () => {
+    setIsModalVisible(!isModalVisible)
+  }
+
+  const toggleModal = (fluctuationDate, pondProductionStatus, temperatureStatus, duration) => {
+    setIsModalVisible(!isModalVisible)
+    setFluctuationDetails([fluctuationDate, pondProductionStatus, temperatureStatus, duration])
+  }
+
+  const FluctuationDetailsModal = () => (
+    <View>
+      <Modal
+        isVisible={isModalVisible}
+        onSwipeComplete={() => toggleHideModal()}
+        onBackdropPress={() => toggleHideModal()}
+        swipeDirection="down">
+        <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
+          <Text style={{marginVertical: 2}}>Fluctuation Date: {fluctuationDetails[0]}</Text>
+          <Text style={{marginVertical: 2}}>Production Status: {fluctuationDetails[1]}</Text>
+          <Text style={{marginVertical: 2}}>Temperature Status: {fluctuationDetails[2]}</Text>
+          <Text style={{marginVertical: 2}}>Duration: {fluctuationDetails[3]}</Text>
+        </View>
+      </Modal>
+    </View>
+  )
+
+  const Item = ({ fluctuationDate, pondProductionStatus, temperatureStatus, duration }) => (
+    <View>
+      <TouchableOpacity onPress={() => toggleModal(monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear() + " " + formatAMPM(fluctuationDate), pondProductionStatus, temperatureStatus, secondsToHms(duration))}>
+        <DataTable.Row>
+          <DataTable.Cell>
+            {monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}
+            {"\n" + formatAMPM(fluctuationDate)}
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {pondProductionStatus}
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {temperatureStatus}
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {secondsToHms(duration)}
+          </DataTable.Cell>
+        </DataTable.Row>
+      </TouchableOpacity>
+    </View>
+  )
 
   const fetchFluctuation = () => {
     const uid = firebase.auth().currentUser.uid
@@ -115,10 +153,10 @@ export const History = (props) => {
     if (fluctuation === null) {
       fetchFluctuation()
     }
-    
+
     return () => { }
   }, [fluctuation])
-  
+
   if (fluctuation !== null && fluctuation.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
@@ -132,9 +170,9 @@ export const History = (props) => {
   if (fluctuation === null) {
     return (
       <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
-        <Text style={styles.screenTitle}>History</Text>
-      </View>
+        <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
+          <Text style={styles.screenTitle}>History</Text>
+        </View>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
           <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
@@ -159,33 +197,40 @@ export const History = (props) => {
       </View>
       <ScrollView style={{ padding: 10, backgroundColor: "white" }}>
         <View style={{ padding: 3 }}>
-        <PondHistoryTempChart />
+          <PondHistoryTempChart />
         </View>
         <View style={{ marginVertical: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
+          <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
         </View>
-      <View style={{ padding: 5, marginVertical: 8, flexDirection: "column", backgroundColor: "skyblue" }}>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Date</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Production Status</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Temperature Status</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold" }}>Duration</Text>
-          </View>
-        </View>
-      </View>
-      <FlatList
-        data={Object.keys(fluctuation).reverse()}
-        renderItem={renderItem}
-        style={{ backgroundColor: "white", padding: 10 }}
-      />
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>
+              Date
+            </DataTable.Title>
+            <DataTable.Title>
+              Prod. Status
+            </DataTable.Title>
+            <DataTable.Title>
+              Temp Status
+            </DataTable.Title>
+            <DataTable.Title>
+              Duration
+            </DataTable.Title>
+          </DataTable.Header>
+          <FlatList
+            data={Object.keys(fluctuation).reverse()}
+            renderItem={renderItem}
+            style={{ backgroundColor: "white", padding: 10 }}
+          />
+          <DataTable.Pagination
+            page={page}
+            numberOfPages={Math.floor(Object.keys(fluctuation).length / 8)}
+            onPageChange={page => setPage(page)}
+            label={`${from + 1}-${to} of ${Object.keys(fluctuation).length}`}
+          />
+        </DataTable>
       </ScrollView>
+      <FluctuationDetailsModal />
     </SafeAreaView>
   )
 }
