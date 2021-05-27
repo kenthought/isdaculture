@@ -150,6 +150,7 @@ export const Ponds = (props) => {
             <FlatList
                 data={Object.keys(ponds)}
                 renderItem={renderItem}
+                keyExtractor={item => item}
             />
         </SafeAreaView>
     )

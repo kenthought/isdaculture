@@ -143,6 +143,7 @@ export const ActionLog = (props) => {
                         data={Object.keys(actionLog).reverse()}
                         renderItem={renderItem}
                         style={{ backgroundColor: "white", padding: 10 }}
+                        keyExtractor={item => item}
                     />
                 </DataTable>
             </View>

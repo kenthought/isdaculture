@@ -203,7 +203,7 @@ export const History = (props) => {
       <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
         <Text style={styles.screenTitle}>History</Text>
       </View>
-      <ScrollView style={{ padding: 10, backgroundColor: "white" }}>
+      <View style={{ padding: 10, backgroundColor: "white" }}>
         <View style={{ padding: 3 }}>
           <PondHistoryTempChart />
         </View>
@@ -229,6 +229,7 @@ export const History = (props) => {
             data={Object.keys(fluctuation).reverse()}
             renderItem={renderItem}
             style={{ backgroundColor: "white", padding: 10 }}
+            keyExtractor={item => item}
           />
           <DataTable.Pagination
             page={page}
@@ -237,7 +238,7 @@ export const History = (props) => {
             label={`${from + 1}-${to} of ${Object.keys(fluctuation).length}`}
           />
         </DataTable>
-      </ScrollView>
+      </View>
       <FluctuationDetailsModal />
     </SafeAreaView>
   )
