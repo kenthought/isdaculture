@@ -478,13 +478,13 @@ export const PondMonitoring = (props) => {
             if (pondTemp < 24) 
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
             else if (pondTemp > 36) 
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
@@ -492,19 +492,19 @@ export const PondMonitoring = (props) => {
             if (pondTemp >= 24 && pondTemp < 36)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
             else if (pondTemp < 16)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
             else if (pondTemp > 44)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
@@ -512,13 +512,13 @@ export const PondMonitoring = (props) => {
             if (pondTemp >= 24 && pondTemp < 36)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
             else if (pondTemp >= 16 && pondTemp < 24)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
@@ -526,13 +526,13 @@ export const PondMonitoring = (props) => {
             if (pondTemp >= 24 && pondTemp < 36)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
             else if (pondTemp >= 36 && pondTemp < 44)
             {
                 const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
@@ -541,17 +541,17 @@ export const PondMonitoring = (props) => {
     const initialFunction = () => {
         if (pondTemp >= 24 && pondTemp < 36) {
             const date = new Date()
-            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
         }
         else if ((pondTemp >= 16 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 44)) {
             const date = new Date()
-            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
         }
         else if (pondTemp < 16 || pondTemp >= 44) {
             const date = new Date()
-            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
         }
     }
