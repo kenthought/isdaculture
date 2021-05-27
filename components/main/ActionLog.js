@@ -115,8 +115,6 @@ export const ActionLog = (props) => {
         />
     );
 
-    console.log(actionLog)
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
