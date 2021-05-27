@@ -40,6 +40,7 @@ export const History = (props) => {
   const [fluctuation, setFluctuation] = useState(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [fluctuationDetails, setFluctuationDetails] = useState([])
+  const [dummy, setDummy] = useState(null)
   const [page, setPage] = useState(0);
   const from = page * 8;
   const to = (page + 1) * 8;
@@ -61,10 +62,10 @@ export const History = (props) => {
         onBackdropPress={() => toggleHideModal()}
         swipeDirection="down">
         <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
-          <Text style={{marginVertical: 2}}>Fluctuation Date: {fluctuationDetails[0]}</Text>
-          <Text style={{marginVertical: 2}}>Production Status: {fluctuationDetails[1]}</Text>
-          <Text style={{marginVertical: 2}}>Temperature Status: {fluctuationDetails[2]}</Text>
-          <Text style={{marginVertical: 2}}>Duration: {fluctuationDetails[3]}</Text>
+          <Text style={{ marginVertical: 2 }}>Fluctuation Date: {fluctuationDetails[0]}</Text>
+          <Text style={{ marginVertical: 2 }}>Production Status: {fluctuationDetails[1]}</Text>
+          <Text style={{ marginVertical: 2 }}>Temperature Status: {fluctuationDetails[2]}</Text>
+          <Text style={{ marginVertical: 2 }}>Duration: {fluctuationDetails[3]}</Text>
         </View>
       </Modal>
     </View>
@@ -75,8 +76,7 @@ export const History = (props) => {
       <TouchableOpacity onPress={() => toggleModal(monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear() + " " + formatAMPM(fluctuationDate), pondProductionStatus, temperatureStatus, secondsToHms(duration))}>
         <DataTable.Row>
           <DataTable.Cell>
-            {monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear()}
-            {"\n" + formatAMPM(fluctuationDate)}
+            {monthNames[new Date(fluctuationDate).getMonth()] + " " + new Date(fluctuationDate).getDate() + ", " + new Date(fluctuationDate).getFullYear() + " " + formatAMPM(fluctuationDate)}
           </DataTable.Cell>
           <DataTable.Cell>
             {pondProductionStatus}
@@ -173,10 +173,18 @@ export const History = (props) => {
         <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
           <Text style={styles.screenTitle}>History</Text>
         </View>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
-          <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
-        </View>
+        <ScrollView style={{ padding: 10, backgroundColor: "white" }}>
+          <View style={{ padding: 3 }}>
+            <PondHistoryTempChart />
+          </View>
+          <View style={{ marginVertical: 10 }}>
+            <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
+          </View>
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={30} />
+            <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
