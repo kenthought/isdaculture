@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import firebase from "firebase";
 import PondDetails from "./PondDetails";
-import { RealtimeTemp, RealtimeDO } from "./PondRealtimeData"
+import { RealtimeData } from "./PondRealtimeData"
 import { PondRealtimeChart } from "./PondRealtimeChart"
 
 Notifications.setNotificationHandler({
@@ -26,12 +26,13 @@ export const PondMonitoring = (props) => {
     const [pondDO, setPondDO] = useState("")
     const [pondStatus, setPondStatus] = useState("")
     const [pondTempStatus, setPondTempStatus] = useState("")
-    const [pondDOStatus, setPondDOStatus] = useState("")
     const [tempAndProdStatus, setTempAndProdStatus] = useState([])
-    // const [chartWidth, setChartWidth] = useState()
     const [chartLabel, setChartLabel] = useState([0, 0, 0, 0, 0])
     const [chartData, setChartData] = useState([0, 0, 0, 0, 0])
     const [fluctuationDate, setFluctuationDate] = useState(new Date())
+    const [initial, setInitial] = useState(true)
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
 
     if (props.props === null) {
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -73,8 +74,6 @@ export const PondMonitoring = (props) => {
                 setPrevPondTemp(chartData[chartData.length - 2])
                 setPondTempTime(chartLabel[chartData.length - 1])
 
-                tempStatus()
-                doStatus()
             }, (errorObject) => {
                 console.log(errorObject.code + " : " + errorObject.message)
             })
@@ -89,14 +88,14 @@ export const PondMonitoring = (props) => {
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        var strTime = hours + ':' + minutes + ':' + seconds;
+        var strTime = hours + ':' + minutes + ':' + seconds + ampm;
         return strTime;
     }
 
     const tempStatus = () => {
         if (pondTemp >= 24 && pondTemp < 36) //NORMAL LEVEL
         {
-            if (pondTemp >= 26 && pondTemp < 34) {
+            if (pondTemp >= 24 && pondTemp < 36) {
                 setPondTempStatus("BETTER - BEST");
             }
             else {
@@ -107,8 +106,10 @@ export const PondMonitoring = (props) => {
         else if ((pondTemp >= 16 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 44))    //WARNING LEVEL
         {
             if (pondTemp >= 16 && pondTemp < 24) {
+                setPondTempStatus("GOOD");
             }
             else if (pondTemp >= 36 && pondTemp < 44) {
+                setPondTempStatus("GOOD");
             }
 
             if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40)) {
@@ -122,10 +123,8 @@ export const PondMonitoring = (props) => {
         }
         else    // CRITICAL LEVEL
         {
-            if (pondTemp === -127.00) {
-                setPondStatus("Critical");
-            }
-            if (pondTemp < 16 & pondTemp != -127.00) {
+            if (pondTemp < 16 && pondTemp != "") {
+                console.log(pondTemp)
                 setPondStatus("Critical");
                 setPondTempStatus("WORST");
             }
@@ -162,8 +161,7 @@ export const PondMonitoring = (props) => {
 
     const sendPondNotificationAndFluctuationRecording = () => {
         // console.log(prevPondTemp, pondTemp, fluctuationDate)
-        var tempArr = []
-        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded temperature is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
+        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded pondTemp is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
             if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
             {
@@ -228,9 +226,9 @@ export const PondMonitoring = (props) => {
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
             {
                 //start timer for fluctuation recording
-                console.log("0 fluctuation date: " + fluctuationDate)
+                console.log("fluctuation date var: " + fluctuationDate)
                 setFluctuationDate(new Date())
-                console.log("0.5 fluctuation date: " + fluctuationDate)
+                console.log("fluctuation date: " + fluctuationDate)
 
                 if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
                 {
@@ -289,7 +287,7 @@ export const PondMonitoring = (props) => {
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
                 console.log("3 fluctuation date: " + fluctuationDate)
-                console.log("1st " + tempArr + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
+                console.log("1st" + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 console.log("Temp and Prod: ", tempAndProdStatus[0], tempAndProdStatus[1])
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
@@ -360,7 +358,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp < 16 && prevPondTemp != -69)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp < 16)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -475,19 +473,134 @@ export const PondMonitoring = (props) => {
         setFluctuationDate("")
     }
 
+    const actionLogAndFishBehavior = () => {
+        if (prevPondTemp >= 24 && prevPondTemp < 36) {
+            if (pondTemp < 24) 
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp > 36) 
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        }
+        else if ((prevPondTemp >= 16 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 44)) {
+            if (pondTemp >= 24 && pondTemp < 36)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp < 16)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp > 44)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        }
+        else if (prevPondTemp < 16) {
+            if (pondTemp >= 24 && pondTemp < 36)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 16 && pondTemp < 24)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        }
+        else if (prevPondTemp >= 44) {
+            if (pondTemp >= 24 && pondTemp < 36)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 36 && pondTemp < 44)
+            {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        }
+    }
+
+    const initialFunction = () => {
+        if (pondTemp >= 24 && pondTemp < 36) {
+            const date = new Date()
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Normal Status: Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+        }
+        else if ((pondTemp >= 16 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 44)) {
+            const date = new Date()
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Warning Status: Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+        }
+        else if (pondTemp < 16 || pondTemp >= 44) {
+            const date = new Date()
+            insertActionLog(pondTemp, pondTempStatus, pondStatus, "Critical Status: Regulating Temperature", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+        }
+    }
+
+    const insertActionLog = (pondTemp, pondTempStatus, prodStatus, action, timeAndDate) => {
+        console.log("Action Log: ", pondTemp, pondTempStatus, prodStatus, action, timeAndDate)
+        const db = firebase.database()
+        db.ref('actionLog/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
+            pondTemp,
+            pondTempStatus,
+            prodStatus,
+            action,
+            timeAndDate
+        })
+    }
+
+    const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) => {
+        console.log("Fish Behavior: ", pondTemp, pondDo, behavior, timeAndDate)
+        const db = firebase.database()
+        db.ref('fishBehavior/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
+            pondTemp,
+            pondDo,
+            behavior,
+            timeAndDate
+        })
+    }
+
     useEffect(() => {
         fetchRealtimeData()
+        tempStatus()
         sendPondNotificationAndFluctuationRecording()
+        actionLogAndFishBehavior()
 
-        console.log(prevPondTemp, pondTemp)
+        if (initial === true) {
+            if (pondTemp != "" && pondDO != "" && pondStatus != "" && pondTempStatus != "") {
+                console.log(pondTemp, pondStatus, pondTempStatus)
+                initialFunction()
+                setInitial(false)
+            }
+        }
+
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);
             Notifications.removeNotificationSubscription(responseListener.current);
             firebase.database().ref('pondRealtimeData').off()
         };
-    }, [pondTempTime])
+    }, [pondTempTime, pondStatus])
 
-    if (props.props === null) {
+    if (props.props === null || pondStatus == "") {
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 <ActivityIndicator size="large" color="skyblue" />
@@ -502,13 +615,8 @@ export const PondMonitoring = (props) => {
                     <PondDetails props={props.props} pondStatus={pondStatus} />
                 </View>
                 <View style={{ flexDirection: "column", marginTop: 10, padding: 10, backgroundColor: "white" }}>
-                    <View style={{ flex: 1, flexDirection: "row" }}>
-                        <View style={{ flex: 1 }}>
-                            <RealtimeTemp pondTemp={pondTemp} pondTempStatus={pondTempStatus} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <RealtimeDO pondDO={pondDO} pondDOStatus={pondDOStatus} />
-                        </View>
+                    <View style={{ flex: 1 }}>
+                        <RealtimeData pondTemp={pondTemp} pondTempStatus={pondTempStatus} pondDO={pondDO} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <PondRealtimeChart pondDetails={props.props} chartData={chartData} chartLabel={chartLabel} />
