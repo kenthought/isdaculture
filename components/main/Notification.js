@@ -170,6 +170,7 @@ export const Notification = (props) => {
                 data={Object.keys(notification).reverse()}
                 renderItem={renderItem}
                 style={{ padding: 10, backgroundColor: "white", borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+                keyExtractor={item => item}
             />
         </SafeAreaView>
     )

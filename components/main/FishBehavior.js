@@ -70,42 +70,47 @@ export const FishBehavior = (props) => {
 
   const FishBehaviorDetailsModal = () => (
     <View>
-        <Modal
-            isVisible={isModal2Visible}
-            onSwipeComplete={() => toggleHideModal()}
-            onBackdropPress={() => toggleHideModal()}
-            swipeDirection="down">
-            <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20 }}>
-                <Text style={{ marginVertical: 2 }}>Temperature: {fishBehaviorDetails[0]}</Text>
-                <Text style={{ marginVertical: 2 }}>Dissolved Oxygen: {fishBehaviorDetails[1]}mg/L</Text>
-                <Text style={{ marginVertical: 2 }}>Fish Behavior: {fishBehaviorDetails[2]}</Text>
-                <Text style={{ marginVertical: 2 }}>Time and Date: {fishBehaviorDetails[3]}</Text>
-            </View>
-        </Modal>
+      <Modal
+        isVisible={isModal2Visible}
+        onSwipeComplete={() => toggleHideModal()}
+        onBackdropPress={() => toggleHideModal()}
+        swipeDirection="down">
+        <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20, flexDirection: "row" }}>
+          <View style={{ flex: .8, justifyContent: "center" }}>
+            <MaterialCommunityIcons name="fish" color={fishBehavior[2] === "Stable" ? "skyblue" : fishBehavior[2] === "Sluggish" ? "orange" : fishBehavior[2] === "Stressed" ? "crimson" : "skyblue"} size={35} />
+          </View>
+          <View>
+            <Text style={{ marginVertical: 2 }}>Temperature: {fishBehaviorDetails[0]}</Text>
+            <Text style={{ marginVertical: 2 }}>Dissolved Oxygen: {fishBehaviorDetails[1]}mg/L</Text>
+            <Text style={{ marginVertical: 2 }}>Fish Behavior: {fishBehaviorDetails[2]}</Text>
+            <Text style={{ marginVertical: 2 }}>Time and Date: {fishBehaviorDetails[3]}</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
-)
+  )
 
 
-const Item = ({ temperature, dissolveOxygen, fishBehavior, timeAndDate }) => (
-  <View>
+  const Item = ({ temperature, dissolveOxygen, fishBehavior, timeAndDate }) => (
+    <View>
       <TouchableOpacity onPress={() => toggleModal2(temperature, dissolveOxygen, fishBehavior, timeAndDate)}>
-          <DataTable.Row>
-              <DataTable.Cell>
-                  {temperature}
+        <DataTable.Row>
+          <DataTable.Cell>
+            {temperature}
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {dissolveOxygen}mg/L
               </DataTable.Cell>
-              <DataTable.Cell>
-                  {dissolveOxygen}mg/L
-              </DataTable.Cell>
-              <DataTable.Cell>
-                  {fishBehavior}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                  {timeAndDate}
-              </DataTable.Cell>
-          </DataTable.Row>
+          <DataTable.Cell>
+            {fishBehavior}
+          </DataTable.Cell>
+          <DataTable.Cell>
+            {timeAndDate}
+          </DataTable.Cell>
+        </DataTable.Row>
       </TouchableOpacity>
-  </View>
-)
+    </View>
+  )
 
   useEffect(() => {
     if (fishBehavior === null) {
@@ -116,37 +121,37 @@ const Item = ({ temperature, dissolveOxygen, fishBehavior, timeAndDate }) => (
   }, [fishBehavior])
 
   if (fishBehavior !== null && fishBehavior.length === 0) {
-      return (
-          <SafeAreaView style={styles.container}>
-              <View style={styles.horizontal}>
-                  <ActivityIndicator size="small" color="skyblue" />
-              </View>
-          </SafeAreaView>
-      )
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.horizontal}>
+          <ActivityIndicator size="small" color="skyblue" />
+        </View>
+      </SafeAreaView>
+    )
   }
 
   if (fishBehavior === null) {
-      return (
-          <SafeAreaView style={styles.container}>
-              <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
-                  <Text style={styles.screenTitle}>Fish Behavior</Text>
-              </View>
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                  <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
-                  <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
-              </View>
-          </SafeAreaView>
-      )
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
+          <Text style={styles.screenTitle}>Fish Behavior</Text>
+        </View>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <MaterialCommunityIcons name="alert-box-outline" color={"lightgrey"} size={56} />
+          <Text style={{ color: "lightgrey", fontSize: 20 }}>No data</Text>
+        </View>
+      </SafeAreaView>
+    )
   }
 
   const renderItem = ({ item }) => (
     <Item
-        temperature={fishBehavior[item].pondTemp}
-        dissolveOxygen={fishBehavior[item].pondDo}
-        fishBehavior={fishBehavior[item].behavior}
-        timeAndDate={fishBehavior[item].timeAndDate}
+      temperature={fishBehavior[item].pondTemp}
+      dissolveOxygen={fishBehavior[item].pondDo}
+      fishBehavior={fishBehavior[item].behavior}
+      timeAndDate={fishBehavior[item].timeAndDate}
     />
-);
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -161,29 +166,30 @@ const Item = ({ temperature, dissolveOxygen, fishBehavior, timeAndDate }) => (
         </View>
       </View>
       <FishBehaviorModal />
-            <View style={{ backgroundColor: "white" }}>
-                <DataTable>
-                    <DataTable.Header>
-                        <DataTable.Title>
-                            Temperature
-                        </DataTable.Title>
-                        <DataTable.Title>
-                            Dissolved Oxygen
-                        </DataTable.Title>
-                        <DataTable.Title>
-                            Fish Behavior
-                        </DataTable.Title>
-                        <DataTable.Title>
-                            Time and Date
-                        </DataTable.Title>
-                    </DataTable.Header>
-                    <FlatList
-                        data={Object.keys(fishBehavior).reverse()}
-                        renderItem={renderItem}
-                        style={{ backgroundColor: "white", padding: 10 }}
-                    />
-                </DataTable>
-            </View>
+      <View style={{ backgroundColor: "white" }}>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>
+              Temperature
+            </DataTable.Title>
+            <DataTable.Title>
+              Dissolved Oxygen
+            </DataTable.Title>
+            <DataTable.Title>
+              Fish Behavior
+            </DataTable.Title>
+            <DataTable.Title>
+              Time and Date
+            </DataTable.Title>
+          </DataTable.Header>
+          <FlatList
+            data={Object.keys(fishBehavior).reverse()}
+            renderItem={renderItem}
+            style={{ backgroundColor: "white", padding: 10 }}
+            keyExtractor={item => item}
+          />
+        </DataTable>
+      </View>
       <FishBehaviorDetailsModal />
     </SafeAreaView>
   )
