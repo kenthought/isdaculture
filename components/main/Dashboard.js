@@ -37,14 +37,16 @@ export function Dashboard({ route }) {
     if (pondDetails === null) {
       fetchPondDetails()
     }
+
+    return () => { firebase.database().ref('ponds').off() }
   }, [pondDetails])
 
   return (
     <Tab.Navigator initialRouteName="Pond Monitoring" tabBar={props => <TabBar {...props} />}>
-      <Tab.Screen name="Pond Monitoring" children={() => <PondMonitoring props={pondDetails} />} />
-      <Tab.Screen name="Fish Behavior" children={() => <FishBehavior props={pondDetails} />}  />
-      <Tab.Screen name="History" children={() => <History props={pondDetails} />} />
-      <Tab.Screen name="Action Log" children={() => <ActionLog props={pondDetails} />} />
+      <Tab.Screen name="Pond Monitoring" key={1} children={() => <PondMonitoring props={pondDetails} />} />
+      <Tab.Screen name="Fish Behavior" key={2} children={() => <FishBehavior props={pondDetails} />}  />
+      <Tab.Screen name="History" key={3} children={() => <History props={pondDetails} />} />
+      <Tab.Screen name="Action Log" key={4} children={() => <ActionLog props={pondDetails} />} />
     </Tab.Navigator> 
   );
 }

@@ -77,7 +77,7 @@ export const FishBehavior = (props) => {
         swipeDirection="down">
         <View style={{ padding: 10, backgroundColor: "white", borderRadius: 20, flexDirection: "row" }}>
           <View style={{ flex: .8, justifyContent: "center" }}>
-            <MaterialCommunityIcons name="fish" color={fishBehavior[2] === "Stable" ? "skyblue" : fishBehavior[2] === "Sluggish" ? "orange" : fishBehavior[2] === "Stressed" ? "crimson" : "skyblue"} size={35} />
+            <MaterialCommunityIcons name="fish" color={fishBehavior[2] === "Stable" ? "skyblue" : fishBehavior[2] === "Sluggish" ? "orange" : fishBehavior[2] === "Stressed" ? "crimson" : "white"} size={35} />
           </View>
           <View>
             <Text style={{ marginVertical: 2 }}>Temperature: {fishBehaviorDetails[0]}</Text>
@@ -117,7 +117,7 @@ export const FishBehavior = (props) => {
       fetchFishBehavior()
     }
 
-    return () => { }
+    return () => { firebase.database().ref('fishBehavior').off() }
   }, [fishBehavior])
 
   if (fishBehavior !== null && fishBehavior.length === 0) {

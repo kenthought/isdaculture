@@ -78,7 +78,7 @@ export const ActionLog = (props) => {
             fetchActionLog()
         }
 
-        return () => { }
+        return () => { firebase.database().ref('actionLog').off() }
     }, [actionLog])
 
     if (actionLog !== null && actionLog.length === 0) {

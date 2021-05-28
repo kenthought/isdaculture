@@ -104,6 +104,26 @@ export const History = (props) => {
       })
   }
 
+  const fetchAverageTemp = () => {
+    firebase.database()
+        .ref("pondRealtimeData")
+        .limitToLast(5)
+        .on("value", (snapshot) => {
+          var count = 0
+          var temp = []
+
+            snapshot.forEach(function (childSnapshot) {
+                var childData = childSnapshot.val();
+                temp[count] = childData.date;
+                count++;
+            });
+            setDummy(temp)
+
+        }, (errorObject) => {
+            console.log(errorObject.code + " : " + errorObject.message)
+        })
+}
+
   const PondHistoryTempChart = () => (
     <View style={{ marginVertical: 10, borderBottomWidth: 1, borderBottomColor: "#f4f4f4" }}>
       <Text style={{ fontWeight: "bold" }}>{props.props.pondName} AVERAGE TEMPERATURE</Text>
@@ -117,7 +137,7 @@ export const History = (props) => {
           ]
         }}
         width={chartWidth} // from react-native
-        height={220}
+        height={170}
         yAxisSuffix="°C"
         yAxisInterval={1} // optional, defaults to 1
         chartConfig={{
@@ -152,9 +172,12 @@ export const History = (props) => {
 
     if (fluctuation === null) {
       fetchFluctuation()
+      fetchAverageTemp()
     }
 
-    return () => { }
+    console.log(dummy)
+
+    return () => { firebase.database().ref('fluctuation').off() }
   }, [fluctuation])
 
   if (fluctuation !== null && fluctuation.length === 0) {
@@ -174,9 +197,7 @@ export const History = (props) => {
           <Text style={styles.screenTitle}>History</Text>
         </View>
         <ScrollView style={{ padding: 10, backgroundColor: "white" }}>
-          <View style={{ padding: 3 }}>
             <PondHistoryTempChart />
-          </View>
           <View style={{ marginVertical: 10 }}>
             <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
           </View>
@@ -203,11 +224,11 @@ export const History = (props) => {
       <View style={{ marginTop: 3, marginBottom: 8, justifyContent: "center" }}>
         <Text style={styles.screenTitle}>History</Text>
       </View>
-      <View style={{ padding: 10, backgroundColor: "white" }}>
-        <View style={{ padding: 3 }}>
+      <ScrollView style={{ flexDirection: "column", padding: 10, backgroundColor: "white" }}>
+        <View style={{ flex : 1,  padding: 3 }}>
           <PondHistoryTempChart />
         </View>
-        <View style={{ marginVertical: 10 }}>
+        <View style={{ flex : 1, marginVertical: 10 }}>
           <Text style={{ fontWeight: "bold" }}>FLUCTUATION HISTORY</Text>
         </View>
         <DataTable>
@@ -231,14 +252,14 @@ export const History = (props) => {
             style={{ backgroundColor: "white", padding: 10 }}
             keyExtractor={item => item}
           />
-          <DataTable.Pagination
+          {/* <DataTable.Pagination
             page={page}
             numberOfPages={Math.floor(Object.keys(fluctuation).length / 8)}
             onPageChange={page => setPage(page)}
             label={`${from + 1}-${to} of ${Object.keys(fluctuation).length}`}
-          />
+          /> */}
         </DataTable>
-      </View>
+      </ScrollView>
       <FluctuationDetailsModal />
     </SafeAreaView>
   )

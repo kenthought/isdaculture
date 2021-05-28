@@ -226,9 +226,7 @@ export const PondMonitoring = (props) => {
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
             {
                 //start timer for fluctuation recording
-                console.log("fluctuation date var: " + fluctuationDate)
                 setFluctuationDate(new Date())
-                console.log("fluctuation date: " + fluctuationDate)
 
                 if (pondTemp >= 20 && pondTemp < 24) //WARNING 1 (Cold)
                 {
@@ -242,7 +240,6 @@ export const PondMonitoring = (props) => {
                 {
                     // condition_id = 3;
                     // production_id = 2;
-                    console.log("1 fluctuation date: " + fluctuationDate)
                     tempAndProdStatus.push("BAD")
                     tempAndProdStatus.push("Warning 1 (Hot)")
                     setTempAndProdStatus(tempAndProdStatus)
@@ -286,9 +283,6 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log("3 fluctuation date: " + fluctuationDate)
-                console.log("1st" + " " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
-                console.log("Temp and Prod: ", tempAndProdStatus[0], tempAndProdStatus[1])
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
@@ -321,7 +315,6 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log("2nd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
@@ -354,7 +347,6 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log("3rd " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
@@ -387,7 +379,6 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log("4th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
@@ -420,7 +411,6 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log("5th " + ((new Date().getTime() - fluctuationDate.getTime()) / 1000))
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
@@ -437,7 +427,7 @@ export const PondMonitoring = (props) => {
     }
 
     const insertFluctuation = (fluctuationDate, temperatureStatus, pondProductionStatus, duration) => {
-        console.log("4 fluctuation date: " + fluctuationDate)
+        console.log("fluctuation date: " + fluctuationDate)
         console.log(temperatureStatus, pondProductionStatus, duration)
         const expectedDate = new Date(props.props.expectedDate)
         expectedDate.setSeconds(expectedDate.getSeconds() + parseInt(duration)) //adding the fluctuation duration

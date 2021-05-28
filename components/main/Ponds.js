@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, TouchableOpacity, Button } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ProgressBar } from 'react-native-paper'
 import { connect } from "react-redux";
