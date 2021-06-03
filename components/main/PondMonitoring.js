@@ -247,7 +247,7 @@ export const PondMonitoring = (props) => {
                 }
             }
         }
-        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40))    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
+        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40) || fluctuationDate != "")    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -286,7 +286,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 16 && prevPondTemp < 20 || fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)      //sending notification when current temperature reaches CRITICAL status (COLD)
             {
@@ -318,7 +318,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 40 && prevPondTemp < 44 || fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)     //sending notification when current temperature reaches CRITICAL status (COLD)
             {
@@ -350,7 +350,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp < 16)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp < 16 || fluctuationDate != "")       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -382,7 +382,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 44 || fluctuationDate != "")  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
