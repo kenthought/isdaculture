@@ -24,22 +24,24 @@ export function Dashboard({ route }) {
         console.log(errorObject.code + " : " + errorObject.message)
       })
   }
+  
+  useEffect(() => {
+    if (pondDetails === null) {
+      fetchPondDetails()
+    }
 
-  if (pondDetails === undefined) {
+    console.log(pondDetails)
+
+    return () => { firebase.database().ref('ponds').off() }
+  }, [pondDetails])
+
+  if (pondDetails === undefined || pondDetails === null) {
     return (
       <View style={{ padding: "50%" }}>
         <ActivityIndicator size="small" color="skyblue" />
       </View>
     )
   }
-
-  useEffect(() => {
-    if (pondDetails === null) {
-      fetchPondDetails()
-    }
-
-    return () => { firebase.database().ref('ponds').off() }
-  }, [pondDetails])
 
   return (
     <Tab.Navigator initialRouteName="Pond Monitoring" tabBar={props => <TabBar {...props} />}>
