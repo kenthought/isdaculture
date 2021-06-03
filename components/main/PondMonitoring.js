@@ -34,20 +34,6 @@ export const PondMonitoring = (props) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"]
 
-    if (props.props === null) {
-        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-        // This listener is fired whenever a notification is received while the app is foregrounded
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-            setNotification(notification);
-        });
-
-        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            console.log(response);
-        });
-    }
-
     const fetchRealtimeData = () => {
         firebase.database()
             .ref("pondRealtimeData")
@@ -244,10 +230,11 @@ export const PondMonitoring = (props) => {
                     tempAndProdStatus.push("Warning 1 (Hot)")
                     setTempAndProdStatus(tempAndProdStatus)
                     console.log(tempAndProdStatus)
+                    console.log("wew ", prevPondTemp, pondTemp)
                 }
             }
         }
-        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40) || fluctuationDate != "")    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
+        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40) && fluctuationDate != "")    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -283,10 +270,11 @@ export const PondMonitoring = (props) => {
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
                 insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                console.log(fluctuationDate)
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 16 && prevPondTemp < 20 || fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 16 && prevPondTemp < 20 && fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)      //sending notification when current temperature reaches CRITICAL status (COLD)
             {
@@ -318,7 +306,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 40 && prevPondTemp < 44 || fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 40 && prevPondTemp < 44 && fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)     //sending notification when current temperature reaches CRITICAL status (COLD)
             {
@@ -350,7 +338,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp < 16 || fluctuationDate != "")       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp < 16 && fluctuationDate != "")       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -382,7 +370,7 @@ export const PondMonitoring = (props) => {
                 insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
             }
         }
-        else if (prevPondTemp >= 44 || fluctuationDate != "")  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 44 && fluctuationDate != "")  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
@@ -465,65 +453,152 @@ export const PondMonitoring = (props) => {
 
     const actionLogAndFishBehavior = () => {
         if (prevPondTemp >= 24 && prevPondTemp < 36) {
-            if (pondTemp < 24) 
-            {
+            if (pondTemp >= 16 && pondTemp < 20) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
-            else if (pondTemp > 36) 
-            {
+            else if (pondTemp >= 40 && pondTemp < 44) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
+            else if (pondTemp < 16) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40)) {
+                if (pondTemp >= 20 && pondTemp < 24) {
+                    const date = new Date()
+                    insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                    insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                }
+                else if (pondTemp >= 36 && pondTemp < 40) {
+                    const date = new Date()
+                    insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                    insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                }
+            }
         }
-        else if ((prevPondTemp >= 16 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 44)) {
-            if (pondTemp >= 24 && pondTemp < 36)
-            {
+        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40)) {
+            if (pondTemp >= 16 && pondTemp < 20) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 40 && pondTemp < 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp < 16) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
-            else if (pondTemp < 16)
-            {
+        }
+        else if (prevPondTemp >= 16 && prevPondTemp < 20) {
+            if (pondTemp < 16) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
-            else if (pondTemp > 44)
-            {
+            else if (pondTemp >= 44) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 40 && pondTemp < 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+        }
+        else if (prevPondTemp >= 40 && prevPondTemp < 44) {
+            if (pondTemp < 16) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 16 && pondTemp < 20) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
         else if (prevPondTemp < 16) {
-            if (pondTemp >= 24 && pondTemp < 36)
-            {
+            if (pondTemp >= 16 && pondTemp < 20) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 40 && pondTemp < 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
-            }
-            else if (pondTemp >= 16 && pondTemp < 24)
-            {
-                const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
-                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
-        else if (prevPondTemp >= 44) {
-            if (pondTemp >= 24 && pondTemp < 36)
-            {
+        else if (prevPondTemp >= 44 && fluctuationDate != "") {
+            if (pondTemp >= 16 && pondTemp < 20) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 40 && pondTemp < 44) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing cold water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp < 16) {
+                const date = new Date()
+                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating system alarm.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+                insertFishBehavior(pondTemp, pondDO, "Stressed", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
+            }
+            else if (pondTemp >= 24 && pondTemp < 36) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the water pump, Monitoring temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
-            }
-            else if (pondTemp >= 36 && pondTemp < 44)
-            {
-                const date = new Date()
-                insertActionLog(pondTemp, pondTempStatus, pondStatus, "Stopping the system alarm, Regulating temperature.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
-                insertFishBehavior(pondTemp, pondDO, "Sluggish", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
     }
@@ -572,10 +647,25 @@ export const PondMonitoring = (props) => {
     useEffect(() => {
         fetchRealtimeData()
         tempStatus()
-        sendPondNotificationAndFluctuationRecording()
         actionLogAndFishBehavior()
+        sendPondNotificationAndFluctuationRecording()
+
+        console.log(prevPondTemp, pondTemp)
 
         if (initial === true) {
+
+            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+            // This listener is fired whenever a notification is received while the app is foregrounded
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                setNotification(notification);
+            });
+
+            // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                console.log(response);
+            });
+
             if (pondTemp != "" && pondDO != "" && pondStatus != "" && pondTempStatus != "") {
                 console.log(pondTemp, pondStatus, pondTempStatus)
                 initialFunction()
