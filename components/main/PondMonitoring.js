@@ -147,16 +147,9 @@ export const PondMonitoring = (props) => {
 
     const sendPondNotificationAndFluctuationRecording = () => {
         // console.log(prevPondTemp, pondTemp, fluctuationDate)
-        if (prevPondTemp == -127.00 || (prevPondTemp >= 24 && prevPondTemp < 36))    //if last recorded pondTemp is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
+        console.log("sendPondNotificationAndFluctuationRecording function")
+        if (prevPondTemp >= 24 && prevPondTemp < 36)    //if last recorded pondTemp is NORMAL, user-default or output form disconnected sensor, -> then allow sms sending once WARNING 2 and CRITICAL status is detected
         {
-            if (prevPondTemp == -127.00)	//means that sensor is disconnected/malfunctioned, or previous temperature is user-default
-            {
-                console.log("\nTemperature Analysis commencing...");
-                console.log("\nSMS Notification Sending: Enabled");
-                console.log("\nSystem Action Logs Insertion: Enabled");
-                console.log("\nFluctuation Occurrence Recording: Enabled\n");
-            }
-
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification and fluctuation recording when current temperature reaches WARNING 2 status (COLD)
             {
                 //start timer for fluctuation recording
@@ -167,7 +160,8 @@ export const PondMonitoring = (props) => {
 
                 var title = "Normal to Warning 2 (Cold) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
+                console.log(title)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
             }
             else if (pondTemp >= 40 && pondTemp < 44)   //sending notification and fluctuation recording when current temperature reaches WARNING 2 status (HOT)
@@ -180,7 +174,8 @@ export const PondMonitoring = (props) => {
 
                 var title = "Normal to Warning 2 (Hot) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
+                console.log(title)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
             }
             else if (pondTemp < 16) //sending notification and fluctuation recording when current temperature reaches CRITICAL status (COLD)
@@ -193,7 +188,8 @@ export const PondMonitoring = (props) => {
 
                 var title = "Normal to Critical (Cold) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
+                console.log(title)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
             }
             else if (pondTemp >= 44)    //sending notification and fluctuation recording when current temperature reaches CRITICAL status (HOT)
@@ -206,7 +202,8 @@ export const PondMonitoring = (props) => {
 
                 var title = "Normal to Critical (Hot) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
+                console.log(title)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
             }
             else if ((pondTemp >= 20 && pondTemp < 24) || (pondTemp >= 36 && pondTemp < 40))      //fluctuation recording when current temperature reaches WARNING 1 status (HOT & COLD)
@@ -220,186 +217,187 @@ export const PondMonitoring = (props) => {
                     // production_id = 3;
                     tempAndProdStatus.push("BAD")
                     tempAndProdStatus.push("Warning 1 (Cold)")
+                    console.log("hiiiiiii@@@@@@@")
                     setTempAndProdStatus(tempAndProdStatus)
                 }
                 else if (pondTemp >= 36 && pondTemp < 40) //WARNING 1 (Hot)
                 {
+                    sendPushNotification(expoPushToken, "wex", "exort")
                     // condition_id = 3;
                     // production_id = 2;
                     tempAndProdStatus.push("BAD")
                     tempAndProdStatus.push("Warning 1 (Hot)")
                     setTempAndProdStatus(tempAndProdStatus)
-                    console.log(tempAndProdStatus)
-                    console.log("wew ", prevPondTemp, pondTemp)
                 }
             }
         }
-        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40) && fluctuationDate != "")    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
+        else if ((prevPondTemp >= 20 && prevPondTemp < 24) || (prevPondTemp >= 36 && prevPondTemp < 40))    //if last temperature recorded by the system is in WARNING 1 status, allow sms sending once WARNING 2 and CRITICAL is detected
         {
+            console.log("helllloooooOOOOOOOOO")
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
                 var title = "Warning 1 to Warning 2 (Cold) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 40 && pondTemp < 44)   //sending notification when current temperature reaches WARNING 2 status (HOT)
             {
                 var title = "Warning 1 to Warning 2 (Hot) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " rises up at " + pondTemp + "°C and is now on WARNING 2 production status. Temperature regulation is ongoing, and preparation for emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp < 16) //sending notification when current temperature reaches CRITICAL status (COLD)
             {
                 var title = "Warning 1 to Critical (Cold) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " quickly lowers down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 44)    //sending notification when current temperature reaches CRITICAL status (HOT)
             {
                 var title = "Warning 1 to Critical (Hot) Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " quickly rises up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
                 var title = "Normal Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                console.log(fluctuationDate)
-                insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                console.log("normal ", fluctuationDate)
+                // insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
         }
-        else if (prevPondTemp >= 16 && prevPondTemp < 20 && fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 16 && prevPondTemp < 20)   //if last temperature recorded by the system is in WARNING 2 status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)      //sending notification when current temperature reaches CRITICAL status (COLD)
             {
                 var title = "Warning 2 (Cold) to Critical (Too Cold)";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " continues to lower down at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 44)    //sending notification when current temperature reaches CRITICAL status (HOT)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 40 && pondTemp < 44)   //sending notification when current temperature reaches WARNING 2 status (HOT)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
                 var title = "Normal Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
         }
-        else if (prevPondTemp >= 40 && prevPondTemp < 44 && fluctuationDate != "")   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 40 && prevPondTemp < 44)   //if last temperature recorded by the system is in WARNING 2 status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp < 16)     //sending notification when current temperature reaches CRITICAL status (COLD)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 44)    //sending notification when current temperature reaches CRITICAL status (HOT)
             {
                 var title = "Warning 2 (Hot) to Critical (Too Hot)";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " continues to rise up at " + pondTemp + "°C and is now on CRITICAL production status. The system activated its alarm while temperature regulation is still ongoing. Immediate emergency harvest is advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
                 var title = "Normal Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
         }
-        else if (prevPondTemp < 16 && fluctuationDate != "")       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp < 16)       //if last temperature recorded by the system is in CRITICAL status (COLD), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
                 var title = "Critical (Too Cold) to Warning 2 (Cold)";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " is now under regulation and continues to rise up at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 40 && pondTemp < 44)   //sending notification when current temperature reaches WARNING 2 status (HOT)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 44)    //sending notification when current temperature reaches CRITICAL status (HOT)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly rises up from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
                 var title = "Normal Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
         }
-        else if (prevPondTemp >= 44 && fluctuationDate != "")  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
+        else if (prevPondTemp >= 44)  //if last temperature recorded by the system is in CRITICAL status (HOT), allow sms sending once WARNING 2 and CRITICAL is detected
         {
             if (pondTemp >= 16 && pondTemp < 20)    //sending notification when current temperature reaches WARNING 2 status (COLD)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on WARNING 2 production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 40 && pondTemp < 44)   //sending notification when current temperature reaches WARNING 2 status (HOT)
             {
                 var title = "Critical (Too Hot) to Warning 2 (Hot)";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " is now under regulation and continues to lower down at " + pondTemp + "°C, classifying it as WARNING 2 production status. System alarm has been deactivated while temperature regulation is ongoing. Preparation for emergency harvest is still advised.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp < 16)      //sending notification when current temperature reaches CRITICAL status (COLD)
             {
                 var title = "QUALITY ASSURANCE";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " suddenly drops down from " + prevPondTemp + "°C to " + pondTemp + "°C and is now on CRITICAL production status. Temperature sensor may be tampered or failed to function properly.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
             else if (pondTemp >= 24 && pondTemp < 36) //stop, record and reset timer and log array when NORMAL temperature is achieved
             {
                 var title = "Normal Temperature";
                 var body = "IsdaCulture Advisory:\n\nWater temperature in " + props.props.pondName + " lowers down at " + pondTemp + "°C and is back to NORMAL temperature.";
-                insertNotification(title + "\n" + body.slice(23), new Date().toString())
                 sendPushNotification(expoPushToken, title, body)
-                insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertFluctuation(fluctuationDate.toString(), tempAndProdStatus[0], tempAndProdStatus[1], (new Date().getTime() - fluctuationDate.getTime()) / 1000)
+                // insertNotification(title + "\n" + body.slice(23), new Date().toString())
             }
         }
     }
@@ -447,6 +445,7 @@ export const PondMonitoring = (props) => {
         updates['ponds/' + firebase.auth().currentUser.uid + "/" + props.props.pondID] = newExpectedDate;
 
         firebase.database().ref().update(updates);
+
         setTempAndProdStatus([])
         setFluctuationDate("")
     }
@@ -579,7 +578,7 @@ export const PondMonitoring = (props) => {
                 insertFishBehavior(pondTemp, pondDO, "Stable", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
             }
         }
-        else if (prevPondTemp >= 44 && fluctuationDate != "") {
+        else if (prevPondTemp >= 44) {
             if (pondTemp >= 16 && pondTemp < 20) {
                 const date = new Date()
                 insertActionLog(pondTemp, pondTempStatus, pondStatus, "Activating water pump releasing hot water.", monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " " + formatAMPM(date))
@@ -622,7 +621,6 @@ export const PondMonitoring = (props) => {
     }
 
     const insertActionLog = (pondTemp, pondTempStatus, prodStatus, action, timeAndDate) => {
-        console.log("Action Log: ", pondTemp, pondTempStatus, prodStatus, action, timeAndDate)
         const db = firebase.database()
         db.ref('actionLog/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
             pondTemp,
@@ -634,7 +632,6 @@ export const PondMonitoring = (props) => {
     }
 
     const insertFishBehavior = (pondTemp, pondDo, behavior, timeAndDate) => {
-        console.log("Fish Behavior: ", pondTemp, pondDo, behavior, timeAndDate)
         const db = firebase.database()
         db.ref('fishBehavior/' + firebase.auth().currentUser.uid + "/" + props.props.pondID).push().set({
             pondTemp,
@@ -645,42 +642,38 @@ export const PondMonitoring = (props) => {
     }
 
     useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
+
         fetchRealtimeData()
         tempStatus()
-        actionLogAndFishBehavior()
         sendPondNotificationAndFluctuationRecording()
+        actionLogAndFishBehavior()
 
         console.log(prevPondTemp, pondTemp)
 
         if (initial === true) {
-
-            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-            // This listener is fired whenever a notification is received while the app is foregrounded
-            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                setNotification(notification);
-            });
-
-            // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-                console.log(response);
-            });
-
             if (pondTemp != "" && pondDO != "" && pondStatus != "" && pondTempStatus != "") {
-                console.log(pondTemp, pondStatus, pondTempStatus)
                 initialFunction()
                 setInitial(false)
             }
         }
 
         return () => {
-            Notifications.removeNotificationSubscription(notificationListener.current);
-            Notifications.removeNotificationSubscription(responseListener.current);
+            if (expoPushToken !== "") {
+                Notifications.removeNotificationSubscription(notificationListener.current);
+                Notifications.removeNotificationSubscription(responseListener.current);
+            }
             firebase.database().ref('pondRealtimeData').off()
         };
-    }, [pondTempTime, pondStatus])
+    }, [pondTempTime])
 
-    if (props.props === null || pondStatus == "") {
+    if (props.props === null || pondStatus == "" || expoPushToken == "") {
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 <ActivityIndicator size="large" color="skyblue" />
@@ -723,7 +716,7 @@ export async function sendPushNotification(expoPushToken, title, body) {
         title,
         body,
     };
-
+    console.log(message)
     await fetch('https://exp.host/--/api/v2/push/send', {
         method: 'POST',
         headers: {
